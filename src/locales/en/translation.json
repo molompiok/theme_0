@@ -1,0 +1,588 @@
+{
+   "common": {
+    "month": "mois",
+    "learnMore": "En savoir plus",
+    "getStarted": "Commencer",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "date": "Date",
+    "days": "Jours",
+    "hours": "Heures",
+    "minutes": "Minutes",
+    "seconds": "Secondes",
+    "optional": "Optionnel"
+  },
+  "header": {
+    "home": "Accueil",
+    "preRegistration": "Préinscription",
+    "about": "À Propos",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "ownerLogin": "Espace Vendeur",
+    "openMenu": "Ouvrir le menu"
+  },
+  "footer": {
+    "title": "Pied de page",
+    "description": "Sublymus aide les PME africaines à prospérer en ligne avec des boutiques e-commerce puissantes et personnalisables.",
+    "platform": "Plateforme",
+    "home": "Accueil",
+    "preRegistrationOffer": "Offre Fondateur",
+    "pricing": "Tarifs",
+    "features": "Fonctionnalités",
+    "company": "Entreprise",
+    "aboutUs": "À Propos",
+    "contactUs": "Nous Contacter",
+    "faq": "FAQ",
+    "legal": "Légal",
+    "terms": "Mentions Légales",
+    "privacy": "Politique de Confidentialité",
+    "resources": "Ressources",
+    "blog": "Blog",
+    "tutorials": "Tutoriels",
+    "allRightsReserved": "Tous droits réservés"
+  },
+  "home": {
+    "hero": {
+      "tagline": "Votre succès e-commerce commence ici",
+      "title": {
+        "line1": "La Plateforme Idéale Pour",
+        "line2": "Votre Boutique en Ligne Africaine."
+      },
+      "subtitle": "Créez gratuitement une boutique en ligne professionnelle et personnalisable. Sublymus vous donne les outils pour vendre plus, gérer facilement et atteindre de nouveaux marchés.",
+      "ctaPrimary": "Préinscrivez-vous (Offre Fondateur)",
+      "ctaSecondary": "Découvrir les fonctionnalités",
+      "imagePlaceholder": "Visuel attrayant de la plateforme Sublymus"
+    },
+    "whySublymus": {
+      "title": "Pourquoi Sublymus est Fait pour Vous ?",
+      "subtitle": "Nous combinons simplicité, innovation et adaptation locale pour propulser votre entreprise."
+    },
+    "features": {
+      "customDesign": {
+        "title": "Design Personnalisé & Pro",
+        "description": "Créez une boutique unique qui reflète votre marque. Pas de compétences techniques requises."
+      },
+      "easyManagement": {
+        "title": "Gestion Simplifiée",
+        "description": "Gérez produits, stocks, commandes et clients depuis un tableau de bord intuitif."
+      },
+      "arInnovation": {
+        "title": "Innovation avec l'AR",
+        "description": "Offrez une expérience d'achat immersive avec la visualisation de produits en Réalité Augmentée."
+      },
+      "socialConnect": {
+        "title": "Connecté à Vos Réseaux",
+        "description": "Intégrez facilement vos réseaux sociaux pour maximiser votre portée et vos ventes."
+      },
+      "localPayments": {
+        "title": "Paiements Locaux Intégrés",
+        "description": "Acceptez les paiements mobiles (MTN, Orange, Wave) et cartes bancaires sans tracas."
+      },
+      "globalReach": {
+        "title": "Portée Internationale",
+        "description": "Outils pour exporter et vendre vos produits au-delà des frontières locales."
+      }
+    },
+    "problem": {
+        "tagline": "Les Défis du E-commerce Africain",
+        "title": "Vendre en Ligne en Afrique : Plus Simple que Vous ne le Pensez !",
+        "point1": "Les réseaux sociaux montrent leurs limites pour une gestion professionnelle.",
+        "point2": "Manque de crédibilité et de personnalisation des vitrines actuelles.",
+        "point3": "Difficulté à gérer les paiements et la logistique de manière intégrée.",
+        "solutionIntro": "C'est pourquoi",
+        "solutionOutro": "vous offre une solution tout-en-un, pensée pour vous.",
+        "imagePlaceholder": "Illustration des défis ou d'entrepreneurs"
+    },
+    "howItWorks": {
+      "title": "Lancez Votre Boutique en 4 Étapes Simples",
+      "subtitle": "De l'idée à la première vente, Sublymus vous accompagne.",
+      "step1": {
+        "title": "Inscrivez-vous",
+        "description": "Créez votre compte Sublymus gratuitement et rapidement."
+      },
+      "step2": {
+        "title": "Personnalisez",
+        "description": "Choisissez un thème, ajoutez votre logo et vos couleurs."
+      },
+      "step3": {
+        "title": "Ajoutez Vos Produits",
+        "description": "Importez votre catalogue, rédigez des descriptions attrayantes."
+      },
+      "step4": {
+        "title": "Commencez à Vendre !",
+        "description": "Partagez votre boutique et gérez vos commandes facilement."
+      }
+    },
+    "pricingSimplified": {
+      "title": "Gratuit pour Démarrer, Puissant pour Grandir.",
+      "subtitle": "Commencez sans frais et débloquez des fonctionnalités avancées quand vous en avez besoin. Pas de surprises, juste de la croissance.",
+      "free": {
+        "title": "Plan Gratuit",
+        "forever": "pour toujours",
+        "description": "Idéal pour lancer votre activité et tester la plateforme.",
+        "feature1": "Boutique en ligne de base",
+        "feature2": "Nombre de produits limité",
+        "feature3": "Gestion des commandes",
+        "cta": "Créer ma boutique gratuite"
+      },
+      "premium": {
+        "title": "Plan Premium",
+        "price": "Dès 10.000 FCFA",
+        "description": "Pour les entreprises prêtes à passer au niveau supérieur.",
+        "feature1": "Réalité Augmentée",
+        "feature2": "Analyses avancées",
+        "feature3": "Outils marketing",
+        "feature4": "Plus de produits & stockage",
+        "cta": "Découvrir l'Offre Fondateur"
+      }
+    },
+    "ctaBottom": {
+      "title": "Prêt à Transformer Votre Business en Ligne ?",
+      "subtitle": "Rejoignez la communauté des fondateurs Sublymus dès aujourd'hui et bénéficiez d'avantages exclusifs. Ensemble, construisons l'avenir du e-commerce africain.",
+      "cta": "Je deviens Fondateur !"
+    }
+  },
+  "form": {
+    "name": {
+      "label": "Votre Nom Complet",
+      "required": "Le nom est requis."
+    },
+    "email": {
+      "label": "Votre Adresse E-mail",
+      "required": "L'adresse e-mail est requise.",
+      "invalid": "Veuillez entrer une adresse e-mail valide."
+    },
+    "shop_name": {
+        "label": "Nom de votre future boutique"
+      },
+      "customAmount": {
+        "label": "Montant de votre contribution (FCFA)",
+        "required": "Le montant est requis pour une contribution personnalisée.",
+        "min": "Le montant minimum est de {{amount}} FCFA."
+      },
+      "display_info": {
+        "label": "Afficher mon nom et le nom de ma boutique dans la liste des fondateurs."
+      },
+      "payment_method": {
+        "label": "Choisissez votre moyen de paiement",
+        "required": "Veuillez sélectionner un moyen de paiement."
+      },
+      "mobileMoneyInstructions": {
+        "line1": "Veuillez effectuer votre transfert de {{amount}} FCFA via {{method}} au numéro : {{number}}.",
+        "line2": "Puis, saisissez les informations de la transaction ci-dessous pour valider."
+      },
+      "visaInstructions": {
+        "line1": "Pour votre contribution de {{amount}} FCFA par carte bancaire, veuillez utiliser les informations suivantes lors du paiement (ou nous vous contacterons pour finaliser) :",
+        "line2": "Note : Pour les paiements par carte, nous pourrions avoir besoin de vous contacter pour finaliser la transaction. Un reçu vous sera envoyé."
+      },
+      "transaction_number": {
+        "label": "Votre numéro de téléphone (ayant servi à la transaction)",
+        "required": "Ce numéro est requis pour valider votre paiement."
+      },
+      "transaction_id": {
+        "label": "ID de la transaction"
+      },
+      "title": "Envoyez-nous un Message",
+      "subject": {
+        "label": "Sujet",
+        "required": "Le sujet est requis."
+      },
+      "message": {
+        "label": "Votre Message",
+        "required": "Veuillez écrire votre message."
+      },
+      "consent": {
+        "label": "J'accepte que mes données soient traitées pour répondre à ma demande.",
+        "required": "Vous devez accepter pour envoyer votre message."
+      },
+      "submitButton": "Envoyer le Message",
+      "sending": "Envoi en cours...",
+      "successMessage": "Merci ! Votre message a été envoyé avec succès. Nous vous répondrons dès que possible.",
+      "errorMessage": "Oups ! Une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer."
+  },
+  "paymentNumbers": {
+    "mtn": "(+225) XX XX XX XX",
+    "orange": "(+225) XX XX XX XX",
+    "moov": "(+225) XX XX XX XX",
+    "wave": "(+225) XX XX XX XX / Code QR Sublymus",
+    "visa": "Informations Carte/Compte Sublymus : XXXX-XXXX-XXXX-XXXX (ou contact)"
+  },
+  "preRegistration": {
+    "title": "Devenez un Fondateur Sublymus !",
+    "subtitle": "Soutenez le développement de la plateforme e-commerce pensée pour l'Afrique et bénéficiez d'un accès Premium exclusif à un tarif imbattable.",
+    "launchCountdown": "Compte à rebours avant le lancement",
+    "officialLaunchDate": "Lancement officiel prévu le {{date}}",
+    "totalCollected": "Total Collecté à ce jour :",
+    "chooseYourSupport": "Choisissez Votre Niveau de Soutien",
+    "tiers": {
+      "bronze": {
+        "name": "Fondateur Bronze",
+        "description": "Accès Premium Essentiel pendant 6 mois et reconnaissance spéciale.",
+        "feature1": "Plan Premium Essentiel (6 mois)",
+        "feature2": "Badge Fondateur Bronze"
+      },
+      "silver": {
+        "name": "Fondateur Argent",
+        "description": "Accès Premium Avancé pendant 1 an, badge et une consultation offerte.",
+        "feature1": "Plan Premium Avancé (12 mois)",
+        "feature2": "Badge Fondateur Argent",
+        "feature3": "Consultation de lancement (30min)"
+      },
+      "gold": {
+        "name": "Fondateur Or",
+        "description": "Accès Premium Illimité pendant 3 ans, support prioritaire et avantages exclusifs.",
+        "feature1": "Plan Premium Ultime (3 ans)",
+        "feature2": "Badge Fondateur Or",
+        "feature3": "Support prioritaire à vie",
+        "feature4": "Accès anticipé aux nouveautés"
+      },
+      "custom": {
+          "name": "Soutien Personnalisé",
+          "description": "Contribuez avec le montant de votre choix et discutons d'un package sur mesure.",
+          "feature1": "Reconnaissance spéciale"
+      }
+    },
+    "selected": "Sélectionné",
+    "selectOffer": "Choisir cette offre",
+    "formTitle": "Finalisez Votre Préinscription",
+    "anonymousFounder": "Fondateur Anonyme",
+    "contribution": "Contribution",
+    "submitButton": "Valider ma contribution et Préinscrire",
+    "dataUsageNote": "Vos informations seront utilisées pour vous contacter concernant Sublymus et votre contribution.",
+    "submissionInProgress": "Soumission en cours...",
+    "ourFounders": {
+      "title": "Nos Pionniers et Visionnaires",
+      "subtitle": "Ils croient en Sublymus et participent activement à la construction du futur du e-commerce en Afrique. Rejoignez-les !",
+      "noFoundersYet": "Soyez le premier à soutenir Sublymus et à apparaître ici !"
+    }
+  },
+  "about": {
+    "hero": {
+      "title": "Qui Sommes-Nous ?",
+      "subtitle": "Découvrez l'histoire, la mission et la vision de Sublymus, la plateforme qui ambitionne de transformer le e-commerce en Afrique."
+    },
+    "story": {
+      "tagline": "Notre Parcours",
+      "title": "L'Origine de Sublymus",
+      "paragraph1": "Sublymus est né d'un constat simple : le potentiel immense du commerce en ligne en Afrique est souvent freiné par un manque d'outils adaptés aux réalités locales. Trop d'entrepreneurs talentueux se heurtent à des barrières techniques ou financières pour digitaliser leur activité de manière professionnelle.",
+      "paragraph2": "Passionnés par la technologie et l'entrepreneuriat africain, nous avons décidé de créer une solution SaaS qui lève ces obstacles. Notre objectif : offrir une plateforme puissante, intuitive et accessible, permettant à chaque PME de créer une boutique en ligne à son image et de rivaliser sur le marché mondial.",
+      "imagePlaceholder": "Illustration de l'équipe Sublymus ou de l'inspiration du projet"
+    },
+    "mission": {
+      "title": "Notre Mission",
+      "text": "Démocratiser l'accès au commerce électronique en Afrique, en fournissant aux PME les outils nécessaires pour créer des boutiques en ligne entièrement personnalisables, alliant simplicité, innovation technologique (comme la Réalité Augmentée) et adaptabilité aux contextes locaux."
+    },
+    "vision": {
+      "title": "Notre Vision",
+      "text": "Devenir la plateforme de référence pour le e-commerce en Afrique, en stimulant l'économie numérique du continent, en connectant les entrepreneurs africains à un marché global et en inspirant une nouvelle vague d'innovation technologique pensée par et pour l'Afrique."
+    },
+    "values": {
+        "title": "Nos Valeurs Fondamentales",
+        "subtitle": "Ce qui guide chacune de nos actions et décisions chez Sublymus.",
+        "innovation": {
+            "title": "Innovation Continue",
+            "description": "Repousser les limites technologiques pour offrir des solutions de pointe accessibles à tous."
+        },
+        "accessibility": {
+            "title": "Accessibilité",
+            "description": "Rendre le e-commerce simple et abordable, sans barrière technique ni financière."
+        },
+        "localAdaptation": {
+            "title": "Adaptation Locale",
+            "description": "Comprendre et intégrer les spécificités des marchés africains pour un impact réel."
+        },
+        "impact": {
+            "title": "Impact Positif",
+            "description": "Contribuer activement à la croissance économique et à l'autonomisation des entrepreneurs."
+        }
+    },
+    "team": {
+      "title": "Rencontrez Notre Équipe",
+      "subtitle": "Les esprits passionnés derrière Sublymus, dédiés à votre succès.",
+      "role": {
+        "fullstack": "Développeur Fullstack & Co-fondateur"
+      },
+      "wilfried": {
+        "bio": "Expert en développement frontend et backend, Wilfried est spécialisé dans l’optimisation des performances et l’expérience utilisateur. Il est le moteur derrière l'architecture innovante de Sublymus."
+      },
+      "simeon": {
+        "bio": "Avec une solide maîtrise des technologies serveur, de l’intégration API et des bases de données, Simeon assure la robustesse et la scalabilité de la plateforme Sublymus."
+      }
+    },
+    "cta": {
+      "title": "Prêt à Faire Partie de l'Aventure Sublymus ?",
+      "subtitle": "Que vous soyez un entrepreneur cherchant à lancer sa boutique, un partenaire potentiel ou simplement curieux, nous serions ravis d'échanger avec vous.",
+      "buttonText": "Contactez-nous",
+      "contactLink": "/contact"
+    }
+  },
+  "faq": {
+    "hero": {
+      "title": "Questions Fréquentes",
+      "subtitle": "Trouvez ici les réponses à vos interrogations sur Sublymus, nos services et notre plateforme."
+    },
+    "searchPlaceholder": "Rechercher dans la FAQ...",
+    "seeTutorial": "Voir le tutoriel détaillé",
+      "noResults": {
+        "title": "Aucun résultat trouvé",
+        "message": "Désolé, nous n'avons trouvé aucune question correspondant à votre recherche. Essayez avec d'autres mots-clés ou contactez-nous."
+    },
+    "categories": {
+      "general": {
+        "title": "Général",
+        "q1": {
+          "question": "Qu'est-ce que Sublymus exactement ?",
+          "answer": "Sublymus est une plateforme SaaS (Software as a Service) innovante conçue pour aider les PME africaines à créer et gérer facilement leurs boutiques en ligne professionnelles et personnalisables. Nous offrons des outils pour la gestion des produits, des commandes, des clients, ainsi que des fonctionnalités avancées comme la Réalité Augmentée."
+        },
+        "q2": {
+          "question": "À qui s'adresse Sublymus ?",
+          "answer": "Sublymus s'adresse à tous les entrepreneurs, artisans, commerçants et PME en Afrique (en commençant par la Côte d'Ivoire) qui souhaitent vendre leurs produits ou services en ligne, qu'ils débutent ou cherchent à professionnaliser une présence existante."
+        },
+        "q3": {
+          "question": "Quand Sublymus sera-t-il officiellement lancé ?",
+          "answer": "Le lancement officiel de Sublymus est prévu pour le <strong>1er Septembre 2025</strong>. Vous pouvez vous préinscrire dès maintenant pour bénéficier de notre Offre Fondateur exclusive !"
+        }
+      },
+      "featuresPricing": {
+        "title": "Fonctionnalités & Tarifs",
+        "q4": {
+          "question": "Est-ce vraiment gratuit de créer une boutique avec Sublymus ?",
+          "answer": "Oui ! Notre plan Freemium vous permet de créer une boutique en ligne fonctionnelle avec les fonctionnalités de base, et ce, gratuitement et pour toujours. Des commissions s'appliquent sur les ventes de ce plan. Les abonnements Premium payants débloquent des fonctionnalités avancées et des commissions réduites."
+        },
+        "q5": {
+          "question": "Quels types de fonctionnalités offrent les abonnements Premium ?",
+          "answer": "Nos plans Premium offrent des outils marketing avancés (analyse de données, campagnes e-mailing, SEO), l'intégration de la Réalité Augmentée (AR) pour la visualisation 3D des produits, plus d'espace de stockage, des options de personnalisation poussées, la gestion des collaborateurs, et bien plus. Les détails des plans seront disponibles prochainement."
+        },
+        "q6": {
+          "question": "La Réalité Augmentée (AR), comment ça marche et est-ce compliqué ?",
+          "answer": "Nous avons simplifié l'intégration de l'AR. Pour certains types de produits, vous pourrez utiliser notre générateur IA 3D (via un abonnement API spécifique ou inclus dans certains plans Premium) ou uploader vos propres modèles 3D. L'objectif est de rendre cette technologie accessible sans expertise technique complexe."
+        },
+        "q7": {
+          "question": "Quels moyens de paiement pourrai-je proposer à mes clients ?",
+          "answer": "Sublymus intègre les moyens de paiement populaires en Afrique, notamment Mobile Money (MTN, Orange, Moov), Wave, ainsi que les cartes bancaires (Visa, Mastercard) et PayPal. Nous prévoyons également d'intégrer d'autres solutions comme les cryptomonnaies à l'avenir."
+        }
+      },
+      "api": {
+        "title": "API & Développeurs",
+        "q1": {
+          "question": "Sublymus propose-t-il une API pour les développeurs ?",
+          "answer": "Oui, Sublymus offrira une API robuste permettant aux développeurs et aux entreprises d'étendre les fonctionnalités de leur boutique, de l'intégrer avec d'autres solutions métiers (ERP, CRM, etc.) ou de créer des expériences personnalisées. Notre API sera payante, avec une tarification flexible (abonnement ou volume d'appels)."
+        },
+        "q2": {
+          "question": "Quels types d'opérations seront possibles via l'API ?",
+          "answer": "L'API permettra de gérer les produits, les commandes, les clients, les stocks, et potentiellement d'interagir avec des services spécifiques de la plateforme. Par exemple, synchroniser les stocks avec un système externe, automatiser la création de commandes, ou récupérer des données pour des analyses personnalisées."
+        },
+        "q3": {
+          "question": "Où puis-je trouver la documentation de l'API ?",
+          "answer": "Une documentation complète pour les développeurs sera disponible sur notre site lors du lancement de l'API. Elle comprendra des guides de démarrage, des références d'endpoints, des exemples de code et les conditions d'utilisation. Pour l'instant, vous pouvez consulter notre <a href='/api-documentation' class='text-teal-600 hover:underline'>page de présentation de l'API</a> pour un aperçu."
+        }
+      },
+      "preinscription": {
+        "title": "Préinscription & Offre Fondateur",
+        "q8": {
+          "question": "Pourquoi une phase de préinscription payante (Offre Fondateur) ?",
+          "answer": "L'Offre Fondateur est une opportunité unique de soutenir activement le développement final de Sublymus tout en bénéficiant d'un accès Premium à des conditions très avantageuses pour une durée déterminée. Votre contribution nous aide à financer les dernières étapes de développement, l'infrastructure et les services API nécessaires."
+        },
+        "q9": {
+          "question": "Comment mon soutien financier sera-t-il utilisé ?",
+          "answer": "Les fonds collectés seront principalement utilisés pour : finaliser le développement des fonctionnalités clés (y compris l'AR et l'IA), renforcer notre infrastructure serveur pour garantir performance et sécurité, couvrir les coûts des APIs tierces (OpenAI, générateur 3D, etc.), et préparer les campagnes marketing pour le lancement."
+        },
+        "q10": {
+          "question": "Le paiement pour l'Offre Fondateur est-il sécurisé ?",
+          "answer": "Oui. Pour les paiements par Mobile Money/Wave, vous effectuez le transfert directement via les plateformes sécurisées des opérateurs. Pour les paiements par carte, nous vous contacterons pour une procédure sécurisée ou utiliserons une passerelle de paiement reconnue lorsque disponible. La sécurité de vos informations est notre priorité."
+        }
+      },
+      "technical": {
+        "title": "Aspects Techniques",
+        "q11": {
+          "question": "Ai-je besoin de compétences techniques pour utiliser Sublymus ?",
+          "answer": "Non, Sublymus est conçu pour être intuitif et facile à utiliser, même sans compétences techniques. Notre interface de création de boutique et de gestion est conviviale. Pour des personnalisations très avancées ou l'utilisation de l'API, des connaissances en développement peuvent être utiles mais ne sont pas requises pour l'utilisation standard."
+        },
+        "q12": {
+          "question": "Sublymus gère-t-il l'hébergement de ma boutique ?",
+          "answer": "Oui, l'hébergement de votre boutique en ligne est inclus dans tous nos plans, y compris le plan Freemium. Vous n'avez pas à vous soucier des aspects techniques de serveur, de sécurité ou de maintenance."
+        }
+      }
+    },
+    "stillHaveQuestions": {
+      "title": "Vous ne trouvez pas votre réponse ?",
+      "subtitle": "Notre équipe est là pour vous aider. N'hésitez pas à nous contacter pour toute question supplémentaire.",
+      "cta": "Nous Contacter"
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "Contactez-Nous",
+      "subtitle": "Une question, une suggestion, ou envie de discuter d'un partenariat ? Nous sommes à votre écoute. Remplissez le formulaire ou utilisez nos coordonnées directes."
+    },
+    "form": {
+      
+      "popup": {
+        "successTitle": "Message Envoyé !",
+        "successMessage": "Merci de nous avoir contactés. Nous avons bien reçu votre message et nous vous répondrons dans les plus brefs délais.",
+        "closeButton": "Fermer"
+      },
+      "title": "Envoyez-nous un Message",
+      "subject": {
+        "label": "Sujet",
+        "required": "Le sujet est requis."
+      },
+      "message": {
+        "label": "Votre Message",
+        "required": "Veuillez écrire votre message."
+      },
+      "consent": { 
+        "label": "J'accepte que mes données soient traitées pour répondre à ma demande.",
+        "required": "Vous devez accepter pour envoyer votre message."
+      },
+      "submitButton": "Envoyer le Message",
+      "sending": "Envoi en cours...",
+      "successMessage": "Merci ! Votre message a été envoyé avec succès. Nous vous répondrons dès que possible.",
+      "errorMessage": "Oups ! Une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer."
+    },
+    "info": {
+      "title": "Nos Coordonnées",
+      "description": "Vous pouvez également nous joindre directement par les moyens suivants. Nous ferons de notre mieux pour vous répondre rapidement.",
+      "email": {
+        "title": "E-mail",
+        "value": "contact@sublymus.com" 
+      },
+      "phone": {
+        "title": "Téléphone / WhatsApp",
+        "value": "+225 XX XX XX XX" 
+      },
+      "address": {
+        "title": "Adresse (Siège Social)",
+        "value": "Abidjan, Côte d’Ivoire (Plus de détails à venir)" 
+      },
+      "social": {
+          "title": "Suivez-nous"
+      }
+    },
+    "mapPlaceholder": "Emplacement de la carte Google Maps (si pertinent)"
+  },
+  "legal": {
+    "mentions": {
+      "title": "Mentions Légales",
+      "lastUpdated": "Dernière mise à jour : {{date}}",
+      "advice": "Ce document est un modèle et doit être vérifié et adapté par un conseiller juridique pour assurer sa conformité.",
+      "section1": {
+        "title": "1. Éditeur du Site",
+        "point1": "Nom/Raison sociale : <strong>{{companyName}}</strong><br>Adresse : {{address}}<br>RCCM : {{rccm}}<br>Capital Social : {{capital}}",
+        "point2": "Email : {{email}}<br>Téléphone : {{phone}}",
+        "point3": "Directeur de la publication : {{directorName}}"
+      },
+      "section2": {
+        "title": "2. Hébergement",
+        "point1": "Hébergeur : {{hostName}}<br>Adresse : {{hostAddress}}<br>Contact : {{hostContact}}"
+      },
+      "section3": {
+        "title": "3. Propriété Intellectuelle",
+        "point1": "L'ensemble de ce site (contenu et présentation) constitue une œuvre protégée par la législation ivoirienne et internationale en vigueur sur le droit d'auteur et, d'une manière générale, sur la propriété intellectuelle et industrielle. Tous les droits de propriété intellectuelle et industrielle (droits d'auteur, brevets, marques), y compris les droits de reproduction, de représentation et d'adaptation, afférents au site {{siteName}} et à son contenu, sont la propriété exclusive de {{companyName}}.",
+        "point2": "Toute reproduction, représentation ou diffusion, totale ou partielle, du contenu de ce site sur quelque support ou par tout procédé que ce soit, sans l'autorisation expresse et préalable de {{companyName}}, est interdite et constituerait une contrefaçon sanctionnée par les articles L.335-2 et suivants du Code de la propriété intellectuelle."
+      },
+      "section4": {
+        "title": "4. Responsabilité",
+        "point1": "{{companyName}} s'efforce d'assurer au mieux de ses possibilités l'exactitude et la mise à jour des informations diffusées sur le site {{siteName}}, dont elle se réserve le droit de corriger, à tout moment et sans préavis, le contenu.",
+        "point2": "Toutefois, {{companyName}} ne peut garantir l'exactitude, la précision ou l'exhaustivité des informations mises à disposition sur ce site. En conséquence, {{companyName}} décline toute responsabilité pour toute interruption du site, survenance de bogues, pour toute imprécision, inexactitude ou omission portant sur des informations disponibles sur le site, pour tous dommages résultant d'une intrusion frauduleuse d'un tiers ayant entraîné une modification des informations mises à disposition sur le site.",
+        "point3": "Le site peut inclure des liens vers d'autres sites web ou d'autres sources Internet. Dans la mesure où {{companyName}} ne peut contrôler ces sites et ces sources externes, {{companyName}} ne peut être tenue pour responsable de la mise à disposition de ces sites et sources externes, et ne peut supporter aucune responsabilité quant au contenu, publicités, produits, services ou tout autre matériel disponible sur ou à partir de ces sites ou sources externes."
+      },
+      "section5": {
+        "title": "5. Données Personnelles",
+        "point1": "La collecte et le traitement de vos données personnelles sont régis par notre <a href='{{privacyPolicyLink}}' class='text-teal-600 hover:underline'>Politique de Confidentialité</a>."
+      },
+      "section6": {
+        "title": "6. Droit Applicable et Juridiction",
+        "point1": "Les présentes mentions légales sont régies par le droit ivoirien. En cas de litige et à défaut d'accord amiable, les tribunaux d'Abidjan seront seuls compétents."
+      },
+      "section7": {
+          "title": "Date de dernière mise à jour",
+          "point1": "{{updateDate}}"
+      }
+    },
+    "privacy": {
+      "title": "Politique de Confidentialité",
+      "section1": {
+        "title": "1. Introduction",
+        "point1": "La présente Politique de Confidentialité décrit comment {{companyName}} (ci-après \"Nous\", \"Notre\", \"Nos\") collecte, utilise et protège les informations personnelles que vous (ci-après \"Utilisateur\", \"Vous\", \"Vos\") fournissez lorsque vous utilisez notre site web {{siteName}} et nos services.",
+        "point2": "Nous nous engageons à protéger votre vie privée et à traiter vos données personnelles conformément aux lois et réglementations applicables en matière de protection des données en Côte d'Ivoire."
+      },
+      "section2": {
+        "title": "2. Données Personnelles Collectées",
+        "point1": "Nous pouvons collecter les types d'informations personnelles suivants :",
+        "item1": "<strong>Informations d'identification :</strong> nom, prénom, adresse e-mail, numéro de téléphone, adresse postale.",
+        "item2": "<strong>Informations de connexion :</strong> identifiants, mots de passe (cryptés), adresses IP, logs de connexion.",
+        "item3": "<strong>Informations relatives à votre boutique :</strong> nom de la boutique, produits, commandes, clients de votre boutique (pour lesquels vous êtes responsable du traitement), données de transaction (sans stocker les numéros de carte complets).",
+        "item4": "<strong>Informations techniques :</strong> type de navigateur, système d'exploitation, informations sur l'appareil, données d'utilisation du site.",
+        "item5": "<strong>Informations de communication :</strong> correspondances échangées avec notre support.",
+        "point2": "Ces informations sont collectées lorsque vous vous inscrivez, utilisez nos services, remplissez des formulaires, ou communiquez avec nous."
+      },
+      "section3": {
+        "title": "3. Utilisation de Vos Données Personnelles",
+        "point1": "Nous utilisons vos données personnelles pour les finalités suivantes :",
+        "item1": "Fournir, gérer et améliorer nos services (création et gestion de boutiques en ligne).",
+        "item2": "Traiter vos inscriptions, abonnements et paiements.",
+        "item3": "Communiquer avec vous concernant votre compte, nos services, les mises à jour et le support technique.",
+        "item4": "Personnaliser votre expérience utilisateur et vous proposer des contenus pertinents."
+       },
+      "section4": {
+        "title": "4. Partage de Vos Données Personnelles",
+        "point1": "Nous ne vendons, ne louons ni ne partageons vos informations personnelles avec des tiers à des fins de marketing sans votre consentement explicite.",
+        "point2": "Nous pouvons toutefois partager vos données avec : Nos prestataires de services (hébergement, paiement, analyse, envoi d'emails) qui agissent en notre nom et selon nos instructions. Les autorités compétentes si la loi l'exige ou pour protéger nos droits."
+      },
+      "section5": {
+        "title": "5. Sécurité de Vos Données",
+        "point1": "Nous mettons en œuvre des mesures de sécurité techniques et organisationnelles appropriées pour protéger vos données personnelles contre l'accès non autorisé, la modification, la divulgation ou la destruction."
+      },
+      "section6": {
+        "title": "6. Vos Droits",
+        "point1": "Conformément à la législation en vigueur, vous disposez des droits suivants concernant vos données personnelles :",
+        "item1": "Droit d'accès.",
+        "item2": "Droit de rectification.",
+        "item3": "Droit à l'effacement (sous conditions).",
+        "item4": "Droit à la limitation du traitement et droit d'opposition.",
+        "point2": "Pour exercer ces droits, veuillez nous contacter à l'adresse : {{email}}."
+      },
+      "section7": {
+        "title": "7. Cookies et Technologies Similaires",
+        "point1": "Notre site utilise des cookies pour améliorer l'expérience utilisateur, analyser le trafic et personnaliser le contenu. Vous pouvez configurer votre navigateur pour refuser les cookies, mais cela pourrait affecter certaines fonctionnalités du site. Une politique de cookies détaillée sera fournie séparément si nécessaire."
+      },
+      "section8": {
+        "title": "8. Modifications de cette Politique de Confidentialité",
+        "point1": "Nous nous réservons le droit de modifier cette Politique de Confidentialité à tout moment. Toute modification sera publiée sur cette page avec la date de la dernière mise à jour. Nous vous encourageons à consulter régulièrement cette page."
+      },
+      "section9": {
+        "title": "9. Contact",
+        "point1": "Pour toute question relative à cette Politique de Confidentialité ou à vos données personnelles, veuillez nous contacter à : {{email}}."
+      }
+    }
+  },
+  "merciFondateur": {
+    "title": "Merci Infiniment, {{name}} !",
+    "subtitle": "Vous êtes officiellement un Fondateur Sublymus avec le pack {{tier}} !",
+    "defaultName": "Cher Fondateur",
+    "defaultTier": "",
+    "tier": {
+        "bronze": "Bronze",
+        "silver": "Argent",
+        "gold": "Or",
+        "custom": "Personnalisé"
+    },
+    "confirmationDetails": "Nous avons bien reçu votre contribution et votre préinscription. Un e-mail de confirmation contenant plus de détails vous sera envoyé sous peu. Votre soutien est incroyablement précieux pour nous !",
+    "nextSteps": {
+      "title": "Prochaines Étapes :",
+      "step1": "Surveillez votre boîte de réception pour notre e-mail de confirmation.",
+      "step2": "Nous vous tiendrons informé(e) de l'avancement du projet et des avantages exclusifs liés à votre statut de fondateur.",
+      "step3": "Préparez-vous pour le lancement officiel le 1er Septembre 2025 !"
+    },
+    "followUsPrompt": "En attendant, n'hésitez pas à nous suivre sur nos réseaux sociaux pour ne rien manquer :",
+    "backToHome": "Retour à l'Accueil",
+    "contactSupport": "Si vous avez des questions, contactez notre support à "
+  },
+  "helpButton": {
+    "text": "Besoin d'aide ?",
+    "title": "Contacter le support Sublymus"
+  }
+
+}

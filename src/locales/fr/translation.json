@@ -1,0 +1,140 @@
+{
+  "header": {
+    "home": "Accueil",
+    "preRegistration": "Préinscription",
+    "about": "À Propos",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "ownerLogin": "Espace Vendeur",
+    "openMenu": "Ouvrir le menu"
+  },
+  "footer": {
+    "title": "Pied de page",
+    "description": "Sublymus aide les PME africaines à prospérer en ligne avec des boutiques e-commerce puissantes et personnalisables.",
+    "platform": "Plateforme",
+    "home": "Accueil",
+    "preRegistrationOffer": "Offre Fondateur",
+    "pricing": "Tarifs",
+    "features": "Fonctionnalités",
+    "company": "Entreprise",
+    "aboutUs": "À Propos",
+    "contactUs": "Nous Contacter",
+    "faq": "FAQ",
+    "legal": "Légal",
+    "terms": "Mentions Légales",
+    "privacy": "Politique de Confidentialité",
+    "resources": "Ressources",
+    "blog": "Blog",
+    "tutorials": "Tutoriels",
+    "allRightsReserved": "Tous droits réservés"
+  },
+   "common": {
+    "month": "mois",
+    "learnMore": "En savoir plus",
+    "getStarted": "Commencer",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "delete": "Supprimer"
+  },
+  "home": {
+    "hero": {
+      "tagline": "Votre succès e-commerce commence ici",
+      "title": {
+        "line1": "La Plateforme Idéale Pour",
+        "line2": "Votre Boutique en Ligne Africaine."
+      },
+      "subtitle": "Créez gratuitement une boutique en ligne professionnelle et personnalisable. Sublymus vous donne les outils pour vendre plus, gérer facilement et atteindre de nouveaux marchés.",
+      "ctaPrimary": "Préinscrivez-vous (Offre Fondateur)",
+      "ctaSecondary": "Découvrir les fonctionnalités",
+      "imagePlaceholder": "Visuel attrayant de la plateforme Sublymus"
+    },
+    "whySublymus": {
+      "title": "Pourquoi Sublymus est Fait pour Vous ?",
+      "subtitle": "Nous combinons simplicité, innovation et adaptation locale pour propulser votre entreprise."
+    },
+    "features": {
+      "customDesign": {
+        "title": "Design Personnalisé & Pro",
+        "description": "Créez une boutique unique qui reflète votre marque. Pas de compétences techniques requises."
+      },
+      "easyManagement": {
+        "title": "Gestion Simplifiée",
+        "description": "Gérez produits, stocks, commandes et clients depuis un tableau de bord intuitif."
+      },
+      "arInnovation": {
+        "title": "Innovation avec l'AR",
+        "description": "Offrez une expérience d'achat immersive avec la visualisation de produits en Réalité Augmentée."
+      },
+      "socialConnect": {
+        "title": "Connecté à Vos Réseaux",
+        "description": "Intégrez facilement vos réseaux sociaux pour maximiser votre portée et vos ventes."
+      },
+      "localPayments": {
+        "title": "Paiements Locaux Intégrés",
+        "description": "Acceptez les paiements mobiles (MTN, Orange, Wave) et cartes bancaires sans tracas."
+      },
+      "globalReach": {
+        "title": "Portée Internationale",
+        "description": "Outils pour exporter et vendre vos produits au-delà des frontières locales."
+      }
+    },
+    "problem": {
+        "tagline": "Les Défis du E-commerce Africain",
+        "title": "Vendre en Ligne en Afrique : Plus Simple que Vous ne le Pensez !",
+        "point1": "Les réseaux sociaux montrent leurs limites pour une gestion professionnelle.",
+        "point2": "Manque de crédibilité et de personnalisation des vitrines actuelles.",
+        "point3": "Difficulté à gérer les paiements et la logistique de manière intégrée.",
+        "solutionIntro": "C'est pourquoi",
+        "solutionOutro": "vous offre une solution tout-en-un, pensée pour vous.",
+        "imagePlaceholder": "Illustration des défis ou d'entrepreneurs"
+    },
+    "howItWorks": {
+      "title": "Lancez Votre Boutique en 4 Étapes Simples",
+      "subtitle": "De l'idée à la première vente, Sublymus vous accompagne.",
+      "step1": {
+        "title": "Inscrivez-vous",
+        "description": "Créez votre compte Sublymus gratuitement et rapidement."
+      },
+      "step2": {
+        "title": "Personnalisez",
+        "description": "Choisissez un thème, ajoutez votre logo et vos couleurs."
+      },
+      "step3": {
+        "title": "Ajoutez Vos Produits",
+        "description": "Importez votre catalogue, rédigez des descriptions attrayantes."
+      },
+      "step4": {
+        "title": "Commencez à Vendre !",
+        "description": "Partagez votre boutique et gérez vos commandes facilement."
+      }
+    },
+    "pricingSimplified": {
+      "title": "Gratuit pour Démarrer, Puissant pour Grandir.",
+      "subtitle": "Commencez sans frais et débloquez des fonctionnalités avancées quand vous en avez besoin. Pas de surprises, juste de la croissance.",
+      "free": {
+        "title": "Plan Gratuit",
+        "forever": "pour toujours",
+        "description": "Idéal pour lancer votre activité et tester la plateforme.",
+        "feature1": "Boutique en ligne de base",
+        "feature2": "Nombre de produits limité",
+        "feature3": "Gestion des commandes",
+        "cta": "Créer ma boutique gratuite"
+      },
+      "premium": {
+        "title": "Plan Premium",
+        "price": "Dès 10.000 FCFA",
+        "description": "Pour les entreprises prêtes à passer au niveau supérieur.",
+        "feature1": "Réalité Augmentée",
+        "feature2": "Analyses avancées",
+        "feature3": "Outils marketing",
+        "feature4": "Plus de produits & stockage",
+        "cta": "Découvrir l'Offre Fondateur"
+      }
+    },
+    "ctaBottom": {
+      "title": "Prêt à Transformer Votre Business en Ligne ?",
+      "subtitle": "Rejoignez la communauté des fondateurs Sublymus dès aujourd'hui et bénéficiez d'avantages exclusifs. Ensemble, construisons l'avenir du e-commerce africain.",
+      "cta": "Je deviens Fondateur !"
+    }
+  }
+}
