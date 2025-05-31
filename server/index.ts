@@ -43,9 +43,11 @@ async function startServer() {
     app.use(devMiddleware)
   }
 
-  // ...
-  // Other middlewares (e.g. some RPC middleware such as Telefunc)
-  // ...
+  
+  app.get('/health', async (_req, res) => {
+    res.status(200).json({ok:true});
+    return
+  });
 
   // Vike middleware. It should always be our last middleware (because it's a
   // catch-all middleware superseding any middleware placed after it).
@@ -70,21 +72,7 @@ async function startServer() {
     const { httpResponse } = pageContext
     if (res.writeEarlyHints) res.writeEarlyHints({ link: httpResponse.earlyHints.map((e) => e.earlyHintLink) })
     httpResponse.headers.forEach(([name, value]) => res.setHeader(name, value))
-    if (pageContext.httpResponse) {
-      // Injecter le <base> ou modifier html avant envoi si besoin
-      let html = pageContext.httpResponse.body;
-      if (baseUrl) {
-        // Ajouter <base href="..."> dans le <head> pour faire préfixer les liens relatifs
-        html = html.replace(
-          /<head([^>]*)>/,
-          `<head$1><base href="${baseUrl}">`
-        ).replaceAll('/assets', 'assets');
-      }
-      res.status(pageContext.httpResponse.statusCode).send(html);
-      return;
-    }
     res.status(httpResponse.statusCode)
-    // For HTTP streams use pageContext.httpResponse.pipe() instead, see https://vike.dev/streaming
     res.send(httpResponse.body)
   })
 
