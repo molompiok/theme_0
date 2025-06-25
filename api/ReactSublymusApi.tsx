@@ -66,12 +66,27 @@ import {
     GetUserStatsResponse,
     GetCategoryParams
 } from './SublymusApi'; // Importer la classe et l'erreur, et TOUS les types
-import { useAuthStore } from '../pages/users/login/AuthStore'; // Pour le token
-import { useGlobalStore } from '../pages/stores/StoreStore'; // Pour l'URL du store
+import { useAuthStore } from './stores/AuthStore'; // Pour le token
+import { useGlobalStore } from './stores/StoreStore'; // Pour l'URL du store
 import logger from './Logger';
-import { BaseStatsParams, CommentInterface, FeatureInterface, ForgotPasswordParams, KpiStatsResponse, OrderStatsIncludeOptions, OrderStatsResponse, ResetPasswordParams, SetupAccountParams, SetupAccountResponse, VisitStatsIncludeOptions, VisitStatsResponse } from '../Interfaces/Interfaces';
+import { BaseStatsParams, CommentInterface, FeatureInterface, ForgotPasswordParams, KpiStatsResponse, OrderStatsIncludeOptions, OrderStatsResponse, ReorderProductFaqsParams, ReorderProductFaqsResponse, ResetPasswordParams, SetupAccountParams, SetupAccountResponse, VisitStatsIncludeOptions, VisitStatsResponse } from './Interfaces/Interfaces';
 import { useTranslation } from 'react-i18next';
-import { Api_host, Server_Host } from '../renderer/+config';
+import { usePageContext } from '../renderer/usePageContext';
+import {
+    CreateProductFaqParams, CreateProductFaqResponse,
+    ListProductFaqsParams, ListProductFaqsResponse,
+    GetProductFaqParams, GetProductFaqResponse,
+    UpdateProductFaqParams, UpdateProductFaqResponse,
+    DeleteProductFaqParams, DeleteProductFaqResponse,
+    ProductFaqInterface, 
+
+    CreateProductCharacteristicParams, CreateProductCharacteristicResponse,
+    ListProductCharacteristicsParams, ListProductCharacteristicsResponse,
+    GetProductCharacteristicParams, GetProductCharacteristicResponse,
+    UpdateProductCharacteristicParams, UpdateProductCharacteristicResponse,
+    DeleteProductCharacteristicParams, DeleteProductCharacteristicResponse,
+    ProductCharacteristicInterface 
+} from  './Interfaces/Interfaces'
 
 async function waitHere(millis: number) {
     await new Promise((rev) => setTimeout(() => rev(0), millis))
@@ -104,47 +119,40 @@ const SublymusApiContext = createContext<SublymusApiContextType>({ api: null });
 // Provider pour l'API et TanStack Query
 interface SublymusApiProviderProps {
     children: ReactNode;
-    apiUrl: string,
-    serverUrl: string,
-    getToken: () => string | undefined
+    handleUnauthorized?: (action?: string, token?: string) => void
+    mainServerUrl?: string,
+    storeApiUrl?: string,
+    getAuthToken: () => string | undefined | null
 }
 
-export const SublymusApiProvider: React.FC<SublymusApiProviderProps> = ({ children, serverUrl, apiUrl, getToken }) => {
-    const { currentStore } = useGlobalStore(); // Utiliser alias
+export const SublymusApiProvider: React.FC<SublymusApiProviderProps> = ({ handleUnauthorized, children, storeApiUrl, getAuthToken, mainServerUrl }) => {
     const { t } = useTranslation();
     const api = useMemo(() => {
-        const storeApiUrl = currentStore?.url; // Peut être null/undefined
 
         // Server URL est toujours requis
 
-        if (!apiUrl) {
-            logger.error("SublymusApiProvider: apiUrl prop is missing!");
-            return null;
-        }
-        if (!serverUrl) {
-            logger.error("SublymusApiProvider: serverUrl prop is missing!");
-            return null;
-        }
+        // if (!storeApiUrl) {
+        //     logger.error("SublymusApiProvider: storeApiUrl prop is missing!");
+        //     return null;
+        // }
 
         // Créer l'instance avec les deux URLs
+        console.log('---------  React Server ----------', {
+            serverUrl: mainServerUrl || 'https://server.sublymus.com',
+            storeApiUrl: storeApiUrl,
+        });
+
         return new SublymusApi({
             handleUnauthorized(action, token) {
-                console.log({ action, token });
-                window.location.href = '/users/login?sessionExpired=true';
+                console.log(action, token);
+
             },
-            getAuthTokenApi() {
-                const token = getToken();
-                console.log(token);
-                return token || ''
-            },
-            getAuthTokenServer() {
-                return 'oat_MzU.ZVc2SUhad1A4dmh6ellfZjFrejJGcEdtOW5ZckN0OWFfN19KeEs2UTE3NzAxNjc4MzE'
-            },
-            serverUrl: serverUrl,
-            storeApiUrl: apiUrl,
+            getAuthToken,
+            serverUrl: mainServerUrl,
+            storeApiUrl: storeApiUrl,
             t
         });
-    }, [currentStore?.url, apiUrl]);
+    }, [storeApiUrl, mainServerUrl]);
 
     return (
         <QueryClientProvider client={queryClient}>
@@ -156,7 +164,7 @@ export const SublymusApiProvider: React.FC<SublymusApiProviderProps> = ({ childr
     );
 };
 
-const waitFor = (async(fn:Promise<any>, time=2000):Promise<any>=>{
+const waitFor = (async (fn: Promise<any>, time = 2000): Promise<any> => {
     await waitHere(time)
     const res = await fn;
     return res
@@ -169,10 +177,6 @@ export const useApi = (): SublymusApi => {
 
     const { t } = useTranslation();
     if (!context || !context.api) {
-        const { currentStore } = useGlobalStore.getState();
-        if (!currentStore?.url) {
-            throw new Error(t('api.contextError.noStoreUrl'));
-        }
         throw new Error(t('api.contextError.providerMissing'));
     }
     return context.api;
@@ -211,7 +215,7 @@ export const useGetThemeById = (themeId: string | undefined, options: { enabled?
 export const useActivateThemeForStore = (): UseMutationResult<ChangeThemeResponse, ApiError, ChangeThemeParams> => {
     const api = useApi();
     return useMutation<ChangeThemeResponse, ApiError, ChangeThemeParams>({
-        mutationFn: (params) => waitFor(api.theme.activateForStore(params),2000), // ou api.store.changeTheme(params)
+        mutationFn: (params) => waitFor(api.theme.activateForStore(params), 2000), // ou api.store.changeTheme(params)
         onSuccess: (data, variables) => {
             // Invalider les détails du store pour refléter le nouveau thème actif
             queryClient.invalidateQueries({ queryKey: ['storeDetails', variables.store_id] } as InvalidateQueryFilters);
@@ -382,7 +386,7 @@ export const useRestartStore = (): UseMutationResult<StoreActionResponse, ApiErr
 export const useAddStoreDomain = (): UseMutationResult<ManageDomainResponse, ApiError, ManageDomainParams> => {
     const api = useApi();
     return useMutation<ManageDomainResponse, ApiError, ManageDomainParams>({
-        mutationFn: (params) => api.store.addDomain(params), 
+        mutationFn: (params) => api.store.addDomain(params),
         onSuccess: (data, variables) => {
             queryClient.invalidateQueries({ queryKey: ['storeDetails', variables.store_id] } as InvalidateQueryFilters);
             logger.info("Store domain added via mutation", { storeId: variables.store_id, domain: variables.domainName });
@@ -404,10 +408,6 @@ export const useCheckStoreNameAvailability = (name: string | undefined, options:
     });
 };
 
-// ========================
-// == Authentification ==
-// ========================
-
 // Clés de Query communes pour Auth
 const AUTH_QUERY_KEYS = {
     me: ['me'] as const,
@@ -415,28 +415,44 @@ const AUTH_QUERY_KEYS = {
 
 
 
+// ========================
+// == Authentification SERVER ==
+// ========================
+
+
+// Hook pour finaliser la création de compte collaborateur
+
+// ========================
+// == Authentification API ==
+// ========================
+
+const getAuthBackend = (api: SublymusApi, target?: 'api' | 'server') => {
+    return api[target == 'api' ? 'authApi' : 'authServer']
+}
+
+
 // Hook pour demander la réinitialisation du mot de passe
-export const useRequestPasswordReset = (): UseMutationResult<MessageResponse, ApiError, ForgotPasswordParams> => {
+export const useRequestPasswordReset = (options?: { backend_target?: 'api' | 'server' }): UseMutationResult<MessageResponse, ApiError, ForgotPasswordParams> => {
     const api = useApi();
     return useMutation<MessageResponse, ApiError, ForgotPasswordParams>({
-        mutationFn: (params) => api.auth.forgotPassword(params), // Assumer que la méthode existe dans api.auth
+        mutationFn: (params) => getAuthBackend(api, options?.backend_target).forgotPassword(params), // Assumer que la méthode existe dans api.authApi
         // Pas de onSuccess/onError générique ici, géré dans le composant
     });
 };
 
-export const useResetPassword = (): UseMutationResult<MessageResponse, ApiError, ResetPasswordParams> => {
+export const useResetPassword = (options?: { backend_target?: 'api' | 'server' }): UseMutationResult<MessageResponse, ApiError, ResetPasswordParams> => {
     const api = useApi();
     return useMutation<MessageResponse, ApiError, ResetPasswordParams>({
-        mutationFn: (params) => api.auth.resetPassword(params), // Assumer que la méthode existe dans api.auth
+        mutationFn: (params) => getAuthBackend(api, options?.backend_target).resetPassword(params), // Assumer que la méthode existe dans api.authApi
         // Pas de onSuccess/onError générique ici, géré dans le composant
     });
 };
 
 
-export const useLogin = (): UseMutationResult<LoginResponse, ApiError, LoginParams> => {
+export const useLogin = (options?: { backend_target?: 'api' | 'server' }): UseMutationResult<LoginResponse, ApiError, LoginParams> => {
     const api = useApi();
     return useMutation<LoginResponse, ApiError, LoginParams>({
-        mutationFn: (credentials) => api.auth.login(credentials),
+        mutationFn: (credentials) => getAuthBackend(api, options?.backend_target).login(credentials),
         onSuccess: (data) => {
             queryClient.setQueryData(AUTH_QUERY_KEYS.me, { user: data.user });
             logger.info("Login successful via mutation", { userId: data.user.id });
@@ -446,19 +462,19 @@ export const useLogin = (): UseMutationResult<LoginResponse, ApiError, LoginPara
     });
 };
 
-export const useRegister = (): UseMutationResult<RegisterResponse, ApiError, RegisterParams> => {
+export const useRegister = (options?: { backend_target?: 'api' | 'server' }): UseMutationResult<RegisterResponse, ApiError, RegisterParams> => {
     const api = useApi();
     return useMutation<RegisterResponse, ApiError, RegisterParams>({
-        mutationFn: (data) => api.auth.register(data),
+        mutationFn: (data) => getAuthBackend(api, options?.backend_target).register(data),
         onSuccess: (data) => { logger.info("Registration successful via mutation", { userId: data.user_id }); },
         onError: (error) => { logger.error({ error }, "Registration failed via mutation"); }
     });
 };
 
-export const useVerifyEmail = (): UseMutationResult<MessageResponse, ApiError, VerifyEmailParams> => {
+export const useVerifyEmail = (options?: { backend_target?: 'api' | 'server' }): UseMutationResult<MessageResponse, ApiError, VerifyEmailParams> => {
     const api = useApi();
     return useMutation<MessageResponse, ApiError, VerifyEmailParams>({
-        mutationFn: (params) => api.auth.verifyEmail(params),
+        mutationFn: (params) => getAuthBackend(api, options?.backend_target).verifyEmail(params),
         onSuccess: (data) => {
             logger.info("Email verified via mutation", data);
             queryClient.invalidateQueries({ queryKey: AUTH_QUERY_KEYS.me });
@@ -467,19 +483,19 @@ export const useVerifyEmail = (): UseMutationResult<MessageResponse, ApiError, V
     });
 };
 
-export const useResendVerificationEmail = (): UseMutationResult<MessageResponse, ApiError, ResendVerificationParams> => {
+export const useResendVerificationEmail = (options?: { backend_target?: 'api' | 'server' }): UseMutationResult<MessageResponse, ApiError, ResendVerificationParams> => {
     const api = useApi();
     return useMutation<MessageResponse, ApiError, ResendVerificationParams>({
-        mutationFn: (params) => api.auth.resendVerificationEmail(params),
+        mutationFn: (params) => getAuthBackend(api, options?.backend_target).resendVerificationEmail(params),
         onSuccess: (data) => { logger.info("Resend verification email requested via mutation", data); },
         onError: (error) => { logger.error({ error }, "Resend verification email failed via mutation"); }
     });
 };
 
-export const useLogout = (): UseMutationResult<MessageResponse, ApiError, void> => {
+export const useLogout = (options?: { backend_target?: 'api' | 'server' }): UseMutationResult<MessageResponse, ApiError, void> => {
     const api = useApi();
     return useMutation<MessageResponse, ApiError, void>({
-        mutationFn: () => api.auth.logout(),
+        mutationFn: () => getAuthBackend(api, options?.backend_target).logout(),
         onSuccess: (data) => {
             queryClient.removeQueries({ queryKey: AUTH_QUERY_KEYS.me });
             queryClient.clear(); // Vider tout le cache
@@ -496,11 +512,11 @@ export const useLogout = (): UseMutationResult<MessageResponse, ApiError, void> 
     });
 };
 
-export const useLogoutAllDevices = (): UseMutationResult<MessageResponse, ApiError, void> => {
+export const useLogoutAllDevices = (options?: { backend_target?: 'api' | 'server' }): UseMutationResult<MessageResponse, ApiError, void> => {
     const api = useApi();
-    const logoutMutation = useLogout(); // Utiliser pour le nettoyage client
+    const logoutMutation = useLogout(options); // Utiliser pour le nettoyage client
     return useMutation<MessageResponse, ApiError, void>({
-        mutationFn: () => api.auth.logoutAllDevices(),
+        mutationFn: () => getAuthBackend(api, options?.backend_target).logoutAllDevices(),
         onSuccess: (data) => {
             logger.info("Logout All Devices successful via mutation", data);
             logoutMutation.mutate(); // Déclencher nettoyage client
@@ -513,20 +529,20 @@ export const useLogoutAllDevices = (): UseMutationResult<MessageResponse, ApiErr
     });
 };
 
-export const useGetMe = (options: { enabled?: boolean } = {}): UseQueryResult<GetMeResponse, ApiError> => {
+export const useGetMe = (options: { enabled?: boolean, backend_target?: 'api' | 'server' } = {}): UseQueryResult<GetMeResponse, ApiError> => {
     const api = useApi();
     return useQuery<GetMeResponse, ApiError>({
         queryKey: AUTH_QUERY_KEYS.me,
-        queryFn: () => api.auth.getMe(),
+        queryFn: () => getAuthBackend(api, options?.backend_target).getMe(),
         enabled: options.enabled !== undefined ? options.enabled : true,
         staleTime: 15 * 60 * 1000,
     });
 };
 
-export const useUpdateUser = (): UseMutationResult<UpdateUserResponse, ApiError, UpdateUserParams> => {
+export const useUpdateUser = (options?: { backend_target?: 'api' | 'server' }): UseMutationResult<UpdateUserResponse, ApiError, UpdateUserParams> => {
     const api = useApi();
     return useMutation<UpdateUserResponse, ApiError, UpdateUserParams>({
-        mutationFn: (params) => waitFor(api.auth.update(params),1000),
+        mutationFn: (params) => waitFor(getAuthBackend(api, options?.backend_target).update(params), 1000),
         onSuccess: (data) => {
             queryClient.setQueryData<GetMeResponse>(AUTH_QUERY_KEYS.me, (oldData) =>
                 oldData ? { user: { ...oldData.user, ...data.user } } : undefined
@@ -539,11 +555,11 @@ export const useUpdateUser = (): UseMutationResult<UpdateUserResponse, ApiError,
     });
 };
 
-export const useDeleteAccount = (): UseMutationResult<MessageResponse, ApiError, void> => {
+export const useDeleteAccount = (options?: { backend_target?: 'api' | 'server' }): UseMutationResult<MessageResponse, ApiError, void> => {
     const api = useApi();
-    const logoutMutation = useLogout();
+    const logoutMutation = useLogout(options);
     return useMutation<MessageResponse, ApiError, void>({
-        mutationFn: () => api.auth.deleteAccount(),
+        mutationFn: () => getAuthBackend(api, options?.backend_target).deleteAccount(),
         onSuccess: (data) => {
             logger.info("Account deleted via mutation", data);
             logoutMutation.mutate(); // Nettoyer après suppression
@@ -553,10 +569,10 @@ export const useDeleteAccount = (): UseMutationResult<MessageResponse, ApiError,
 };
 
 // Hook pour finaliser la création de compte collaborateur
-export const useSetupAccount = (): UseMutationResult<SetupAccountResponse, ApiError, SetupAccountParams> => {
+export const useSetupAccount = (options?: { backend_target?: 'api' | 'server' }): UseMutationResult<SetupAccountResponse, ApiError, SetupAccountParams> => {
     const api = useApi();
     return useMutation<SetupAccountResponse, ApiError, SetupAccountParams>({
-        mutationFn: (params) => api.auth.setupAccount(params),
+        mutationFn: (params) => getAuthBackend(api, options?.backend_target).setupAccount(params),
         // Pas de onSuccess/onError générique, géré dans la page SetupAccountPage
     });
 };
@@ -600,7 +616,7 @@ export const useGetProduct = (
     options: { enabled?: boolean } = {}
 ): UseQueryResult<GetProductResponse, ApiError> => {
     const api = useApi();
-    const enabled = !!(params.product_id || params.slug) && (options.enabled !== undefined ? options.enabled : true);
+    const enabled = !!(params.product_id || params.slug_product) && (options.enabled !== undefined ? options.enabled : true);
     return useQuery<GetProductResponse, ApiError>({
         queryKey: PRODUCTS_QUERY_KEYS.details(params),
         queryFn: () => api.products.getOne(params), // Utiliser getOne
@@ -753,9 +769,14 @@ export const useUpdateCategory = (): UseMutationResult<UpdateCategoryResponse, A
             logger.info("Category updated via mutation", data.category);
             const categoryId = variables.category_id;
             queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEYS.lists() } as InvalidateQueryFilters);
+            queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEYS.details({ slug: data.category.slug }) } as InvalidateQueryFilters);
+            // Invalider les détails par slug et ancien slug si disponible
+            queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEYS.details({ slug: data.category.slug }) } as InvalidateQueryFilters);
+            if (variables.data.slug && variables.data.slug !== data.category.slug) {
+                queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEYS.details({ slug: variables.data.slug }) } as InvalidateQueryFilters);
+            }
             queryClient.setQueryData<GetCategoryResponse>(CATEGORIES_QUERY_KEYS.details({ category_id: categoryId }), data.category);
             // Invalider aussi par slug si le slug a pu changer
-            queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEYS.details({ slug: data.category.slug }) } as InvalidateQueryFilters);
         },
         onError: (error) => { logger.error({ error }, "Failed to update category via mutation"); }
     });
@@ -1041,9 +1062,248 @@ export const useDeleteDetail = (): UseMutationResult<DeleteDetailResponse, ApiEr
 };
 
 
-// --- Fin Partie 2/3 ---
-// src/api/ReactSublymusApi.tsx
-// ... (Imports, Setup, Auth, Produits, Catégories, Features, Values, Détails Hooks inchangés) ...
+// ==================================
+// == Hooks pour ProductFaqs       ==
+// ==================================
+
+// Clés de Query communes pour ProductFaqs
+const PRODUCT_FAQS_QUERY_KEYS = {
+    all: (productId: string) => ['productFaqs', productId] as const, // Toutes les FAQs pour un produit
+    lists: (params: ListProductFaqsParams) => [...PRODUCT_FAQS_QUERY_KEYS.all(params.product_id), 'list', params] as const,
+    details: (faqId: string) => ['productFaqDetails', faqId] as const, // Détail d'une FAQ spécifique
+};
+
+/**
+ * Hook pour créer une FAQ pour un produit.
+ */
+export const useCreateProductFaq = (): UseMutationResult<CreateProductFaqResponse, ApiError, CreateProductFaqParams> => {
+    const api = useApi();
+    return useMutation<CreateProductFaqResponse, ApiError, CreateProductFaqParams>({
+        mutationFn: (params) => api.productFaqs.create(params),
+        onSuccess: (data, variables) => {
+            logger.info("ProductFaq created via mutation", data.faq);
+            // Invalider la liste des FAQs pour ce produit
+            queryClient.invalidateQueries({ queryKey: PRODUCT_FAQS_QUERY_KEYS.lists({ product_id: variables.data.product_id }) } as InvalidateQueryFilters);
+            // Potentiellement invalider le cache du produit si le produit contient une liste de ses FAQs
+            queryClient.invalidateQueries({ queryKey: ['productDetails', variables.data.product_id] } as InvalidateQueryFilters); // Ou PRODUCTS_QUERY_KEYS.details
+        },
+        onError: (error) => { logger.error({ error }, "Failed to create ProductFaq via mutation"); }
+    });
+};
+
+/**
+ * Hook pour récupérer la liste des FAQs d'un produit.
+ */
+export const useListProductFaqs = (
+    params: ListProductFaqsParams,
+    options: { enabled?: boolean } = {}
+): UseQueryResult<ListProductFaqsResponse, ApiError> => {
+    const api = useApi();
+    return useQuery<ListProductFaqsResponse, ApiError>({
+        queryKey: PRODUCT_FAQS_QUERY_KEYS.lists(params),
+        queryFn: () => api.productFaqs.listForProduct(params),
+        enabled: !!params.product_id && (options.enabled !== undefined ? options.enabled : true),
+    });
+};
+
+/**
+ * Hook pour récupérer les détails d'une FAQ spécifique.
+ */
+export const useGetProductFaq = (
+    params: GetProductFaqParams,
+    options: { enabled?: boolean } = {}
+): UseQueryResult<GetProductFaqResponse, ApiError> => {
+    const api = useApi();
+    return useQuery<GetProductFaqResponse, ApiError>({
+        queryKey: PRODUCT_FAQS_QUERY_KEYS.details(params.faqId),
+        queryFn: () => api.productFaqs.getOne(params),
+        enabled: !!params.faqId && (options.enabled !== undefined ? options.enabled : true),
+        staleTime: 5 * 60 * 1000, // Cache un peu plus long pour les détails
+    });
+};
+
+/**
+ * Hook pour mettre à jour une FAQ.
+ */
+export const useUpdateProductFaq = (): UseMutationResult<UpdateProductFaqResponse, ApiError, UpdateProductFaqParams> => {
+    const api = useApi();
+    return useMutation<UpdateProductFaqResponse, ApiError, UpdateProductFaqParams>({
+        mutationFn: (params) => api.productFaqs.update(params),
+        onSuccess: (data, variables) => {
+            logger.info("ProductFaq updated via mutation", data.faq);
+            // Invalider la liste des FAQs pour ce produit et le détail de cette FAQ
+            queryClient.invalidateQueries({ queryKey: PRODUCT_FAQS_QUERY_KEYS.lists({ product_id: data.faq.product_id }) } as InvalidateQueryFilters);
+            queryClient.setQueryData<GetProductFaqResponse>(PRODUCT_FAQS_QUERY_KEYS.details(variables.faqId), data.faq);
+             // Potentiellement invalider le cache du produit
+            queryClient.invalidateQueries({ queryKey: ['productDetails', data.faq.product_id] } as InvalidateQueryFilters);
+        },
+        onError: (error) => { logger.error({ error }, "Failed to update ProductFaq via mutation"); }
+    });
+};
+export const useReorderProductFaqs = (): UseMutationResult<ReorderProductFaqsResponse, ApiError, ReorderProductFaqsParams> => {
+    const api = useApi();
+    return useMutation<ReorderProductFaqsResponse, ApiError, ReorderProductFaqsParams>({
+        mutationFn: (params) => api.productFaqs.reorder(params),
+        onSuccess: (data, variables) => {
+            logger.info("ProductFaqs reordered via mutation", { productId: variables.product_id, group: variables.group });
+            // Invalider la liste des FAQs pour ce produit (et ce groupe si applicable)
+            // pour s'assurer que le frontend récupère le nouvel ordre.
+            const listParams: ListProductFaqsParams = { product_id: variables.product_id };
+            if (variables.group) {
+                listParams.group = variables.group;
+            }
+            queryClient.invalidateQueries({ queryKey: PRODUCT_FAQS_QUERY_KEYS.lists(listParams) } as InvalidateQueryFilters);
+            
+            // Optionnellement, mettre à jour directement le cache avec la liste retournée si la réponse la contient.
+            // Cela peut éviter un re-fetch immédiat si la réponse de 'reorder' est la liste complète et ordonnée.
+            // if (data.faqs && data.faqs.list) {
+            //   queryClient.setQueryData(PRODUCT_FAQS_QUERY_KEYS.lists(listParams), data.faqs);
+            // }
+
+            // Invalider aussi le cache du produit si le produit est censé connaître l'ordre de ses FAQs
+            queryClient.invalidateQueries({ queryKey: ['productDetails', variables.product_id] } as InvalidateQueryFilters);
+        },
+        onError: (error, variables) => {
+            logger.error({ error, productId: variables.product_id, group: variables.group }, "Failed to reorder ProductFaqs via mutation");
+        }
+    });
+};
+/**
+ * Hook pour supprimer une FAQ.
+ */
+export const useDeleteProductFaq = (): UseMutationResult<DeleteProductFaqResponse, ApiError, DeleteProductFaqParams> => {
+    const api = useApi();
+    // Pour récupérer le product_id afin d'invalider la bonne liste
+    let productIdForInvalidation: string | undefined;
+    return useMutation<DeleteProductFaqResponse, ApiError, DeleteProductFaqParams>({
+        onMutate: async (variables) => {
+            // Optionnel: annuler les requêtes en cours pour ce détail
+            await queryClient.cancelQueries({ queryKey: PRODUCT_FAQS_QUERY_KEYS.details(variables.faqId) });
+            // Snapshot de la valeur précédente
+            const previousFaq = queryClient.getQueryData<ProductFaqInterface>(PRODUCT_FAQS_QUERY_KEYS.details(variables.faqId));
+            productIdForInvalidation = previousFaq?.product_id;
+            return { previousFaq };
+        },
+        mutationFn: (params) => api.productFaqs.delete(params),
+        onSuccess: (data, variables) => {
+            logger.info("ProductFaq deleted via mutation", { faqId: variables.faqId });
+            if (productIdForInvalidation) {
+                queryClient.invalidateQueries({ queryKey: PRODUCT_FAQS_QUERY_KEYS.lists({ product_id: productIdForInvalidation }) } as InvalidateQueryFilters);
+            } else {
+                 // Fallback: invalider toutes les listes de FAQ si product_id n'a pas pu être déterminé
+                queryClient.invalidateQueries({ queryKey: ['productFaqs'] } as InvalidateQueryFilters);
+            }
+            queryClient.removeQueries({ queryKey: PRODUCT_FAQS_QUERY_KEYS.details(variables.faqId) });
+             // Potentiellement invalider le cache du produit
+             if (productIdForInvalidation) {
+                queryClient.invalidateQueries({ queryKey: ['productDetails', productIdForInvalidation] } as InvalidateQueryFilters);
+             }
+        },
+    });
+};
+
+
+// ==================================
+// == Hooks pour ProductCharacteristics ==
+// ==================================
+
+// Clés de Query communes pour ProductCharacteristics
+const PRODUCT_CHARACTERISTICS_QUERY_KEYS = {
+    all: (productId: string) => ['productCharacteristics', productId] as const,
+    lists: (params: ListProductCharacteristicsParams) => [...PRODUCT_CHARACTERISTICS_QUERY_KEYS.all(params.product_id), 'list', params] as const,
+    details: (characteristicId: string) => ['productCharacteristicDetails', characteristicId] as const,
+};
+
+/**
+ * Hook pour créer une caractéristique pour un produit.
+ */
+export const useCreateProductCharacteristic = (): UseMutationResult<CreateProductCharacteristicResponse, ApiError, CreateProductCharacteristicParams> => {
+    const api = useApi();
+    return useMutation<CreateProductCharacteristicResponse, ApiError, CreateProductCharacteristicParams>({
+        mutationFn: (params) => api.productCharacteristics.create(params),
+        onSuccess: (data, variables) => {
+            logger.info("ProductCharacteristic created via mutation", data.characteristic);
+            queryClient.invalidateQueries({ queryKey: PRODUCT_CHARACTERISTICS_QUERY_KEYS.lists({ product_id: variables.data.product_id }) } as InvalidateQueryFilters);
+            queryClient.invalidateQueries({ queryKey: ['productDetails', variables.data.product_id] } as InvalidateQueryFilters);
+        },
+        onError: (error) => { logger.error({ error }, "Failed to create ProductCharacteristic via mutation"); }
+    });
+};
+
+/**
+ * Hook pour récupérer la liste des caractéristiques d'un produit.
+ */
+export const useListProductCharacteristics = (
+    params: ListProductCharacteristicsParams,
+    options: { enabled?: boolean } = {}
+): UseQueryResult<ListProductCharacteristicsResponse, ApiError> => {
+    const api = useApi();
+    return useQuery<ListProductCharacteristicsResponse, ApiError>({
+        queryKey: PRODUCT_CHARACTERISTICS_QUERY_KEYS.lists(params),
+        queryFn: () => api.productCharacteristics.listForProduct(params),
+        enabled: !!params.product_id && (options.enabled !== undefined ? options.enabled : true),
+    });
+};
+
+/**
+ * Hook pour récupérer les détails d'une caractéristique spécifique.
+ */
+export const useGetProductCharacteristic = (
+    params: GetProductCharacteristicParams,
+    options: { enabled?: boolean } = {}
+): UseQueryResult<GetProductCharacteristicResponse, ApiError> => {
+    const api = useApi();
+    return useQuery<GetProductCharacteristicResponse, ApiError>({
+        queryKey: PRODUCT_CHARACTERISTICS_QUERY_KEYS.details(params.characteristicId),
+        queryFn: () => api.productCharacteristics.getOne(params),
+        enabled: !!params.characteristicId && (options.enabled !== undefined ? options.enabled : true),
+        staleTime: 5 * 60 * 1000,
+    });
+};
+
+/**
+ * Hook pour mettre à jour une caractéristique.
+ */
+export const useUpdateProductCharacteristic = (): UseMutationResult<UpdateProductCharacteristicResponse, ApiError, UpdateProductCharacteristicParams> => {
+    const api = useApi();
+    return useMutation<UpdateProductCharacteristicResponse, ApiError, UpdateProductCharacteristicParams>({
+        mutationFn: (params) => api.productCharacteristics.update(params),
+        onSuccess: (data, variables) => {
+            logger.info("ProductCharacteristic updated via mutation", data.characteristic);
+            queryClient.invalidateQueries({ queryKey: PRODUCT_CHARACTERISTICS_QUERY_KEYS.lists({ product_id: data.characteristic.product_id }) } as InvalidateQueryFilters);
+            queryClient.setQueryData<GetProductCharacteristicResponse>(PRODUCT_CHARACTERISTICS_QUERY_KEYS.details(variables.characteristicId), data.characteristic);
+            queryClient.invalidateQueries({ queryKey: ['productDetails', data.characteristic.product_id] } as InvalidateQueryFilters);
+        },
+        onError: (error) => { logger.error({ error }, "Failed to update ProductCharacteristic via mutation"); }
+    });
+};
+
+/**
+ * Hook pour supprimer une caractéristique.
+ */
+export const useDeleteProductCharacteristic = (): UseMutationResult<DeleteProductCharacteristicResponse, ApiError, DeleteProductCharacteristicParams> => {
+    const api = useApi();
+    let productIdForInvalidation: string | undefined;
+    return useMutation<DeleteProductCharacteristicResponse, ApiError, DeleteProductCharacteristicParams>({
+        onMutate: async (variables) => {
+            await queryClient.cancelQueries({ queryKey: PRODUCT_CHARACTERISTICS_QUERY_KEYS.details(variables.characteristicId) });
+            const previousCharacteristic = queryClient.getQueryData<ProductCharacteristicInterface>(PRODUCT_CHARACTERISTICS_QUERY_KEYS.details(variables.characteristicId));
+            productIdForInvalidation = previousCharacteristic?.product_id;
+            return { previousCharacteristic };
+        },
+        mutationFn: (params) => api.productCharacteristics.delete(params),
+        onSuccess: (data, variables) => {
+            logger.info("ProductCharacteristic deleted via mutation", { characteristicId: variables.characteristicId });
+            if (productIdForInvalidation) {
+                queryClient.invalidateQueries({ queryKey: PRODUCT_CHARACTERISTICS_QUERY_KEYS.lists({ product_id: productIdForInvalidation }) } as InvalidateQueryFilters);
+                queryClient.invalidateQueries({ queryKey: ['productDetails', productIdForInvalidation] } as InvalidateQueryFilters);
+            } else {
+                queryClient.invalidateQueries({ queryKey: ['productCharacteristics'] } as InvalidateQueryFilters); // Fallback
+            }
+            queryClient.removeQueries({ queryKey: PRODUCT_CHARACTERISTICS_QUERY_KEYS.details(variables.characteristicId) });
+        }
+    });
+};
 
 // --- Hooks Personnalisés par Namespace ---
 
@@ -1122,7 +1382,7 @@ export const useGetOrderDetails = (
 export const useUpdateOrderStatus = (): UseMutationResult<UpdateOrderStatusResponse, ApiError, UpdateOrderStatusParams> => {
     const api = useApi();
     return useMutation<UpdateOrderStatusResponse, ApiError, UpdateOrderStatusParams>({
-        mutationFn: (params) => waitFor(api.orders.updateStatus(params),3000),
+        mutationFn: (params) => waitFor(api.orders.updateStatus(params), 3000),
         onSuccess: (data, variables) => {
             logger.info("Order status updated via mutation", data.order);
             const orderId = variables.user_order_id;

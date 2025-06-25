@@ -10,58 +10,56 @@ import type { OnRenderHtmlAsync } from 'vike/types'
 import { getPageTitle } from './getPageTitle'
 import { I18nextProvider } from 'react-i18next';
 import './tw.css'
+import { DEFAULT_SETTINGS } from "../api/themeSettingsStore";
+import { ThemeProvider } from "./ThemeContext";
 
 const onRenderHtml: OnRenderHtmlAsync = async (pageContext): ReturnType<OnRenderHtmlAsync> => {
-  const { Page } = pageContext
+  const { Page, themeSettingsInitial, storeInfoInitial, storeApiUrl, serverUrl, lang: langFromContext } = pageContext;
+
+  console.log({storeApiUrl, serverUrl});
+  
+  
   const i18n = i18next.cloneInstance();
-  // This onRenderHtml() hook only supports SSR, see https://vike.dev/render-modes for how to modify
-  // onRenderHtml() to support SPA
-  if (!Page) throw new Error('My onRenderHtml() hook expects pageContext.Page to be defined')
-
-     const headersOriginal = pageContext.headers as Record<string, string> || {};
-     const baseUrlFromHeader = headersOriginal['x-base-url'] || '/'; 
-     const apiUrlFromHeader = headersOriginal['x-target-api-service'] || '/'; 
-     const serverUrlFromHeader = headersOriginal['x-server-url'] || '/'; 
-
   // Alternatively, we can use an HTML stream, see https://vike.dev/streaming
   const pageHtml = ReactDOMServer.renderToString(
-     <I18nextProvider i18n={i18n}>
+    <ThemeProvider>
+      <I18nextProvider i18n={i18n}>
         <Layout pageContext={pageContext}>
           <Page />
         </Layout>
       </I18nextProvider>
+    </ThemeProvider>
   )
 
-  const title = getPageTitle(pageContext)
-  const desc = pageContext.data?.description || pageContext.config.description || 'Demo of using Vike'
-  const lang = pageContext.headers?.['accept-language']?.includes('fr') ? 'fr' : 'en';
-  await i18n.changeLanguage(lang);
-  const isPreviewMode = pageContext.urlOriginal.includes('preview')
-  // console.log('pageContext',pageContext);
 
+  const title = getPageTitle(pageContext); // getPageTitle peut utiliser storeInfoInitial?.name
+  const desc = pageContext.data?.description || pageContext.config.description || storeInfoInitial?.description || 'Boutique en ligne Sublymus';
+  const lang = langFromContext || 'fr'; // Utiliser la langue du contexte si définie
 
-  // const logo = (pageContext.data as any)?.logoUrl || logoUrl
+  // Le logo et le nom du store pour les métadonnées peuvent venir de storeInfoInitial
+  const currentStoreName = storeInfoInitial?.name || 'Ma Boutique';
+  const currentFavicon = storeInfoInitial?.favicon?.[0] ? `${serverUrl || ''}${storeInfoInitial.favicon[0]}` : logoUrl; // Ajuster si favicon est URL complète
+
   const documentHtml = escapeInject`<!DOCTYPE html>
-    <html lang="fr">
+    <html lang="${lang}" class="${''}">
       <head>
         <meta charset="UTF-8" />
-        <link rel="icon" href="${logoUrl}" />
+        <link rel="icon" href="${currentFavicon}" />
         <meta name="description" content="${desc}" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css"/>
         <title>${title}</title>
+        ${(themeSettingsInitial?.general?.bodyFont || DEFAULT_SETTINGS.general?.bodyFont || '') && escapeInject`<link href="https://fonts.googleapis.com/css2?family=${(themeSettingsInitial.general?.bodyFont || DEFAULT_SETTINGS.general?.bodyFont!).replace(' ', '+')}:wght@300;400;500;600;700&display=swap" rel="stylesheet">`}
+        ${(themeSettingsInitial?.general?.headingFont || DEFAULT_SETTINGS.general?.headingFont || '') && escapeInject`<link href="https://fonts.googleapis.com/css2?family=${(themeSettingsInitial.general?.headingFont || DEFAULT_SETTINGS.general?.headingFont!).replace(' ', '+')}:wght@400;500;600;700;800&display=swap" rel="stylesheet">`}
       </head>
       <body>
         <div id="root">${dangerouslySkipEscape(pageHtml)}</div>
       </body>
-    </html>`
+    </html>`;
 
   return {
     documentHtml,
     pageContext: {
-      lang,
-      baseUrl:baseUrlFromHeader,
-      serverUrl:serverUrlFromHeader,
-      apiUrl:apiUrlFromHeader,
+      // lang est déjà dans pageContext grâce à onBeforeRender ou logique précédente
+      // themeSettingsInitial, storeApiUrl, serverUrl sont déjà passés par le serveur Express et listés dans passToClient
     }
-  }
+  };
 }

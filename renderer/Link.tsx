@@ -11,10 +11,11 @@ type Props = {
   activeIcon?: JSX.Element;
   defaultIcon?: JSX.Element;
   onClick?:()=>void
-  title?:string
+  title?:string,
+  style?:any
 }
 
-function Link({ title,href, activeIcon, children, className = '', defaultIcon ,onClick}: Props) {
+function Link({style, title,href, activeIcon, children, className = '', defaultIcon ,onClick}: Props) {
   const pageContext = usePageContext();
   const { urlPathname } = pageContext;
   let isActive = href === '/' ? urlPathname === href : urlPathname.startsWith(href);  
@@ -33,7 +34,7 @@ function Link({ title,href, activeIcon, children, className = '', defaultIcon ,o
   const icon = isActive ? activeIcon : defaultIcon;
 
   return (
-    <a title={title} href={onClick?undefined:href} onClick={onClick} className={combinedClassName} >
+    <a style={style} title={title} href={onClick?undefined:href} onClick={onClick} className={combinedClassName} >
       {icon && <span className="flex-shrink-0 w-5 h-5">{icon}</span>} {/* Icône avec taille définie */}
       {children && <span className="truncate">{children}</span>} {/* Span pour le texte, truncate si long */}
     </a>

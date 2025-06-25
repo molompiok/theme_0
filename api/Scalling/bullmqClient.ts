@@ -12,8 +12,11 @@ const redisPort = parseInt(process.env.REDIS_PORT || '6379', 10);
 const queueName = 'service-to-server+s_server'; // La queue cible
 
 let serverQueue: Queue | null = null;
-let redisConnection: IORedis | null = null;
+export let redisConnection: IORedis | null = null;
 
+export const redisClient = {
+    connection:null as IORedis | null
+}
 function initializeQueue() {
     if (serverQueue) return serverQueue;
 
@@ -24,6 +27,7 @@ function initializeQueue() {
         maxRetriesPerRequest: null,
         lazyConnect: true, // Peut être lazy ici, on ne connecte que si on envoie
     });
+    redisClient.connection = redisConnection 
 
     if(!redisConnection) throw new Error('Redis connection failed to initialize');
 

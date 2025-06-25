@@ -1,6 +1,7 @@
 //renderer/types.ts
-
+import {DEFAULT_SETTINGS} from '../api/themeSettingsStore'  
 import type { i18n as I18nInstanceType } from 'i18next'; // ✅ Importer le type
+import { StoreInterface } from '../Interfaces/Interfaces';
 
 // Type pour les données d'hydratation du store i18next
 // C'est une structure imbriquée: { langue: { namespace: { clé: valeur } } }
@@ -45,11 +46,11 @@ declare global {
       lang: string,
       // App urls
       serverUrl: string,
-      apiUrl: string,
-      baseUrl:string
+      themeSettingsInitial: typeof DEFAULT_SETTINGS, 
+      storeInfoInitial: StoreInterface, 
+      storeApiUrl: string,
     }
   }
 }
 
-// Tell TypeScript this file isn't an ambient module
 export { }

@@ -1,0 +1,27 @@
+{
+  "identity": {
+    "product_to_feature": "ID_PRODUIT_PRINCIPAL",
+    "category_for_recommendations": "ID_CATEGORIE_RECOMMANDATIONS"
+  },
+  "palette": {
+    "primary": "teal",
+    "accent": "amber",
+    "text_base": "slate-800",
+    "text_muted": "slate-500",
+    "background_light": "white",
+    "background_dark": "slate-900"
+  },
+  "typography": {
+    "font_headings": "font-serif",
+    "font_body": "font-sans"
+  },
+  "layout": {
+    "product_gallery_layout": "grid"
+  },
+  "content": {
+    "banner": {
+      "title": "Découvrez notre pièce maîtresse",
+      "subtitle": "L'excellence à portée de main."
+    }
+  }
+}

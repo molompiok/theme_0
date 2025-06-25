@@ -17,10 +17,10 @@ import compression from 'compression'
 import { renderPage, createDevMiddleware } from 'vike/server'
 import { localDir, root } from './root.js'
 
-import { closeQueue, getServerQueue } from "../api/Scalling/bullmqClient.js";
+import { closeQueue, getServerQueue, redisClient } from "../api/Scalling/bullmqClient.js";
 import { LoadMonitorService } from "../api/Scalling/loadMonitorClient.js";
 import logger from "../api/Logger.js";
-
+import { http } from "../Components/Utils/functions.js";
 
 const SERVICE_ID = process.env.SERVICE_ID;
 const isProduction = process.env.NODE_ENV === "production";
@@ -58,12 +58,47 @@ async function startServer() {
     return res.sendFile(url);
   });
   app.get('*', async (req, res) => {
-    const baseUrl = req.headers['x-base-url'] || ''; // ex. '/ladona2'
-    console.log(req.headers);
+
+    const storeApiUrl = http + req.headers['x-store-api-url'] as string ; 
+    const serverUrl = http +  req.headers['x-server-api-url'] as string;
+    
+    if (!storeApiUrl) console.warn("[Theme Mono Server] X-Store-Api-Url header or env var not found.");
+    if (!serverUrl) console.warn("[Theme Mono Server] X-Server-Url header or env var not found.");
+    
+    const storeId = storeApiUrl.split('/')[3]; 
+
+    let themeSettingsInitial = {};
+    let storeInfoInitial = {}; // Pour le nom du store, logo, etc.
+
+    if (storeId && redisClient.connection && redisClient.connection.status === 'ready') {
+      try {
+        const settingsString = await redisClient.connection.get(`theme_settings:${storeId}:mono`); // Clé Redis pour les settings du thème Mono
+        if (settingsString) {
+          themeSettingsInitial = JSON.parse(settingsString);
+          console.log(`[Theme Mono Server] Loaded theme settings for store ${storeId} from Redis.`);
+        } else {
+          console.log(`[Theme Mono Server] No theme settings found in Redis for store ${storeId}. Using defaults.`);
+        }
+        // Tu pourrais aussi charger des infos basiques du store ici (nom, logo) si elles sont aussi dans Redis ou via une API rapide
+        // const storeInfoString = await redisClient.connection.get(`store_info:${storeId}`);
+        // if (storeInfoString) storeInfoInitial = JSON.parse(storeInfoString);
+
+      } catch (err) {
+        console.error(`[Theme Mono Server] Error fetching theme settings from Redis for store ${storeId}:`, err);
+      }
+    } else if (storeId) {
+      console.warn(`[Theme Mono Server] Redis not ready, cannot fetch theme settings for store ${storeId}.`);
+    }
 
     const pageContextInit = {
       urlOriginal: req.originalUrl,
-      headersOriginal: req.headers
+      headersOriginal: req.headers, 
+      themeSettingsInitial,         // <-- NOUVEAU: Settings chargés
+      storeInfoInitial,           // <-- NOUVEAU: Infos du store (optionnel)
+      storeApiUrl: storeApiUrl || null, // Assurer qu'il est passé
+      serverUrl: serverUrl || null,     // Assurer qu'il est passé
+      // Tu pourrais aussi passer storeId au pageContext si nécessaire dans le client
+      // storeIdFromSSR: storeId 
     }
     const pageContext = await renderPage(pageContextInit)
     if (pageContext.errorWhileRendering) {
@@ -84,7 +119,7 @@ async function startServer() {
     bullmqQueue: getServerQueue(),
     logger: logger,
     serviceId: SERVICE_ID || 'SERVICE-xxxid',
-    serviceType: 'SERVICE',
+    serviceType: 'theme',
   });
 
   loadMonitoring.startMonitoring()
