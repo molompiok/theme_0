@@ -1,41 +1,23 @@
 ///api/SublymusApi.ts
 
 import type {
-    ListType, ProductInterface, CategoryInterface, UserInterface, StoreInterface,
-    CommandInterface, CommentInterface, DetailInterface, Inventory, Role, FavoriteInteraface,
-    FilterType, CommandFilterType, UserFilterType, GlobalSearchType, StatsData,
-    StatParamType, EventStatus, FeatureInterface, TypeJsonRole, ValueInterface,
+    ListType, ProductInterface, CategoryInterface, UserInterface,
+    CommandInterface, CommentInterface, DetailInterface, Inventory, FavoriteInteraface,
+    FilterType, CommandFilterType, UserFilterType,
+    FeatureInterface, ValueInterface,
     UserAddressInterface,
     UserPhoneInterface,
-    StoreFilterType,
-    ThemeInterface,
     ForgotPasswordParams,
     ResetPasswordParams,
     SetupAccountParams,
     SetupAccountResponse,
-    BaseStatsParams,
-    KpiStatsResponse,
-    VisitStatsIncludeOptions,
-    OrderStatsIncludeOptions,
-    VisitStatsResponse,
-    OrderStatsResponse,
-    ProductFaqInterface, ProductCharacteristicInterface, // S'ils sont dans Interfaces.ts
-    // Nouveaux types Params/Response que nous venons de définir (ou importer si dans Interfaces.ts)
-    CreateProductFaqParams, CreateProductFaqResponse,
     ListProductFaqsParams, ListProductFaqsResponse,
     GetProductFaqParams, GetProductFaqResponse,
-    UpdateProductFaqParams, UpdateProductFaqResponse,
-    DeleteProductFaqParams, DeleteProductFaqResponse,
-    CreateProductCharacteristicParams, CreateProductCharacteristicResponse,
     ListProductCharacteristicsParams, ListProductCharacteristicsResponse,
     GetProductCharacteristicParams, GetProductCharacteristicResponse,
-    UpdateProductCharacteristicParams, UpdateProductCharacteristicResponse,
-    DeleteProductCharacteristicParams, DeleteProductCharacteristicResponse,
-    ReorderProductFaqsParams,
-    ReorderProductFaqsResponse
-} from './Interfaces/Interfaces'; // Adapter le chemin
+    } from './Interfaces/Interfaces'; // Adapter le chemin
 
-export { StatParamType, UserFilterType, CommandFilterType, Inventory }
+export { UserFilterType, Inventory }
 import logger from './Logger';
 type RequestOptions = {
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -77,10 +59,6 @@ export class ApiError extends Error {
         super(message); this.name = 'ApiError'; this.status = status; this.body = body;
     }
 }
-export type BuildFormDataForFeaturesValuesParam = { product_id: string, currentFeatures: Partial<FeatureInterface>[], initialFeatures: Partial<FeatureInterface>[] }
-
-// --- Types Spécifiques aux Endpoints ---
-
 // Auth
 // Catégories
 export type GetCategoriesParams = {
@@ -101,9 +79,6 @@ export type GetCategoryParams = {
 }
 export type GetCategoriesResponse = ListType<CategoryInterface>; // L'API retourne une liste paginée
 export type GetCategoryResponse = CategoryInterface | null; // Pour GET par ID/Slug
-export type CreateCategoryResponse = { message: string, category: CategoryInterface };
-export type UpdateCategoryResponse = { message: string, category: CategoryInterface };
-export type DeleteCategoryResponse = { message: string, isDeleted: boolean };
 export type GetSubCategoriesParams = { category_id: string };
 export type GetSubCategoriesResponse = CategoryInterface[];
 export type GetCategoryFiltersParams = { slug?: string };
@@ -114,16 +89,10 @@ export type GetFeaturesParams = { feature_id?: string, product_id?: string };
 export type GetFeaturesResponse = ListType<FeatureInterface>; // L'API retourne une liste (paginate?)
 export type GetFeaturesWithValuesParams = { feature_id?: string, product_id?: string };
 export type GetFeaturesWithValuesResponse = FeatureInterface[]; // Retourne un tableau direct
-// Types pour create/update/delete Feature si nécessaire (non implémenté car multipleUpdate est prioritaire)
-export type MultipleUpdateFeaturesValuesParams = { product_id: string, currentFeatures: Partial<FeatureInterface>[], initialFeatures: Partial<FeatureInterface>[] };
-export type MultipleUpdateFeaturesValuesResponse = { message: string, product?: ProductInterface }; // Retourne le produit mis à jour
 
 // Détails Produit
 export type GetDetailsParams = { product_id?: string, detail_id?: string, page?: number, limit?: number, order_by?: string };
 export type GetDetailsResponse = ListType<DetailInterface>; // L'API retourne une liste paginée
-export type CreateDetailResponse = { message: string, detail: DetailInterface };
-export type UpdateDetailResponse = { message: string, detail: DetailInterface };
-export type DeleteDetailResponse = { message: string, isDeleted: boolean };
 
 // Commandes
 export type CreateOrderParams = Omit<CommandInterface, 'id' | 'user_id' | 'reference' | 'status' | 'payment_status' | 'payment_method' | 'currency' | 'total_price' | 'items_count' | 'events_status' | 'created_at' | 'updated_at' | 'items' | 'user'>;
@@ -166,23 +135,12 @@ export type DeleteFavoriteResponse = { message: string, isDeleted: boolean };
 
 
 
-// ==============================
-// == Namespace UserProfile    ==
-// == (Adresses & Téléphones)  ==
-// ==============================
+// (Adresses & Téléphones)
 // 2 - Définir types Params/Response spécifiques
 export type DeleteAddressParams = { address_id: string };
 export type DeletePhoneParams = { phone_id: string };
 export type AddressType = any; // Placeholder
 export type PhoneType = any; // Placeholder
-
-
-// --- Interface pour UserAddress ---
-// Basée sur le modèle UserAddress.ts
-
-
-// --- Interface pour UserPhone ---
-// Basée sur le modèle UserPhone.ts
 
 
 // --- Mise à jour des types Params/Response pour UserProfileApiNamespace ---
@@ -218,33 +176,10 @@ export type GetMeResponse = {
 // GetUsersParams = UserFilterType (défini dans Interfaces)
 export type GetUsersResponse = ListType<UserInterface>;
 
-// Roles (Collaborateurs)
-export type GetCollaboratorsParams = { page?: number, limit?: number };
-export type GetCollaboratorsResponse = ListType<Role & { user: UserInterface }>;
-export type CreateCollaboratorParams = { email: string, full_name?: string, dashboard_url: string, setup_account_url?: string };
-export type CreateCollaboratorResponse = { message: string, role: Role & { user: UserInterface } };
-export type UpdateCollaboratorParams = { collaborator_user_id: string, permissions: Partial<TypeJsonRole> };
-export type UpdateCollaboratorResponse = { message: string, role: Role & { user: UserInterface } };
-export type RemoveCollaboratorResponse = { message: string, isDeleted: boolean };
-
 // Inventaires
 export type GetInventoriesParams = { inventory_id?: string, page?: number, limit?: number };
 export type GetInventoriesResponse = ListType<Inventory>; // Ou Inventory si ID fourni
 export type InventoryResponse = { message: string, inventory: Inventory }; // Pour create/update
-export type DeleteInventoryResponse = { message: string, isDeleted: boolean };
-
-// Statistiques
-// GetStatsParams = StatParamType (défini dans Interfaces)
-export type GetStatsResponse = StatsData;
-
-// General
-export type GlobalSearchParams = { text: string };
-export type GlobalSearchResponse = GlobalSearchType;
-
-// Debug
-export type ScaleResponse = { message: string, jobId: string };
-
-
 // --- Types Spécifiques aux Paramètres & Réponses (Modifiés pour Update et GET) ---
 
 // Auth (Types inchangés pour la plupart)
@@ -263,107 +198,12 @@ export type GetProductListParams = FilterType; // Type pour getList
 export type GetProductListResponse = ListType<ProductInterface>;
 export type GetProductParams = { product_id?: string; slug_product?: string, with_all?: boolean, with_categories?: boolean, with_feature?: boolean }; // Type pour getOne
 export type GetProductResponse = ProductInterface | null;
-export type CreateProductParams = { product: Partial<ProductInterface>, views?: (string | Blob)[] }; // Adapté pour _buildFormData
-export type CreateProductResponse = { message?: string, product: ProductInterface };
-export type UpdateProductParams = { data: Partial<ProductInterface>, product_id: string }; // 2 - Changé (ID séparé)
-export type UpdateProductResponse = { message?: string, product?: Partial<ProductInterface> };
-export type DeleteProductResponse = MessageResponse; // Type pour delete
-export type GetStoresParams = StoreFilterType;
-export type GetStoresResponse = ListType<StoreInterface>; // API retourne ListType
 
-// Store
-export interface GetStoreParams { store_id: string; }
-export type GetStoreResponse = StoreInterface; // API retourne l'objet Store
-
-export interface CreateStoreParams {
-    name: string; // Slug-like
-    title: string;
-    description?: string;
-    logo?: (string | Blob)[];
-    cover_image?: (string | Blob)[];
-}
-// La réponse contient le store complet créé par le serveur
-export type CreateStoreResponse = { message: string, store: StoreInterface };
-
-export type UpdateStoreParams = { data: Partial<StoreInterface>, store_id: string }
-export type UpdateStoreResponse = { message: string, store: StoreInterface };
-
-export interface DeleteStoreParams { store_id: string; }
-export type DeleteStoreResponse = { message: string, isDeleted?: boolean }; // isDeleted peut être retourné par l'API
-
-export interface ChangeThemeParams { store_id: string; themeId: string | null; }
-export type ChangeThemeResponse = { message: string, store: StoreInterface };
-
-export interface UpdateStoreStatusParams { store_id: string; isActive: boolean; }
-export type UpdateStoreStatusResponse = { message: string, store: StoreInterface };
-
-export interface StoreActionParams { store_id: string; }
-export type StoreActionResponse = { message: string, store?: StoreInterface };
-
-export interface ManageDomainParams { store_id: string; domainName: string; }
-export type ManageDomainResponse = { message: string, store: StoreInterface };
-
-export interface AvailableNameParams { name: string; }
-export type AvailableNameResponse = { is_available_name: boolean };
-
-
-// Interface pour les filtres des stats utilisateurs
-// Basée sur UserStatsFilterType de ton code Zustand
-export interface GetUserStatsParams {
-    with_active_users?: boolean;
-    with_total_clients?: boolean;
-    with_online_clients?: boolean; // Si l'API le supporte
-    with_satisfied_clients?: boolean; // Si l'API le supporte
-}
-
-// Interface pour la réponse des stats utilisateurs
-// Basée sur UserStatsResult de ton code Zustand
-export interface GetUserStatsResponse {
-    stats: {
-        activeUsers?: number; // Renommer pour correspondre?
-        totalClients?: number;
-        onlineClients?: number;
-        averageSatisfaction?: number; // Note moyenne?
-        ratedUsersCount?: number; // Nombre d'utilisateurs ayant noté?
-        // Ajouter d'autres stats si retournées par l'API
-    }
-}
-
-// --- Fin Types Stores ---
 // Types génériques
 export type MessageResponse = { message: string };
 export type DeleteResponse = { message?: string, isDeleted?: boolean } | null;
 // --- Types pour les méthodes Theme ---
-export interface GetThemesParams {
-    page?: number;
-    limit?: number;
-    search?: string; // Recherche par nom, description, features?
-    is_public?: boolean; // Filtrer par thèmes publics?
-    is_active?: boolean; // Filtrer par thèmes activés globalement?
-    // Ajouter d'autres filtres si l'API les supporte (ex: par feature tag)
-}
-// La réponse de la liste est une pagination standard
-export type GetThemesResponse = ListType<ThemeInterface>;
 
-export interface GetThemeParams {
-    theme_id: string; // ID ou Slug du thème
-}
-// La réponse pour un thème est l'objet ThemeInterface lui-même
-export type GetThemeResponse = ThemeInterface;
-// --- Fin Types Theme ---
-
-// Type pour _buildFormData (optionnel)
-type BuildFormDataParams = {
-    data: Record<string, any>;
-    files?: Record<string, (string | Blob)[]>; // Fichiers optionnels
-    dataFilesFelds?: string[]; // Clés de 'data' qui contiennent des fichiers
-};
-// Type pour _prepareMultiple (optionnel)
-type PrepareMultipleFeaturesValuesParams = {
-    product_id: string;
-    currentFeatures: Partial<FeatureInterface & { _request_mode?: 'new' | 'edited' | 'deleted' }>[];
-    initialFeatures: Partial<FeatureInterface>[];
-};
 
 // --- Classe Principale SublymusApi ---
 export class SublymusApi {
@@ -388,15 +228,8 @@ export class SublymusApi {
     public comments: CommentsApiNamespace;
     public favorites: FavoritesApiNamespace;
     public userProfile: UserProfileApiNamespace;
-    public users: UsersApiNamespace;
-    public roles: RolesApiNamespace;
     public inventories: InventoriesApiNamespace;
-    public stats: StatsApiNamespace;
-    public general: GeneralApiNamespace;
-    public debug: DebugApiNamespace;
-    public store: StoreNamespace;
-    public readonly theme: ThemeNamespace;
-
+    
     constructor({ getAuthToken, serverUrl, storeApiUrl, t, handleUnauthorized }: { handleUnauthorized?: (action: 'api' | 'server', token?: string) => void, storeApiUrl?: string, serverUrl?: string, getAuthToken: () => string | undefined | null, t: (key: string, params?: any) => string }) {
 
         this.t = t;
@@ -413,8 +246,6 @@ export class SublymusApi {
         logger.info(`SublymusApi initialized with URL: ${this.storeApiUrl}`);
 
         // Initialiser les namespaces
-        this.store = new StoreNamespace(this)
-        this.theme = new ThemeNamespace(this);
         this.authApi = new AuthApiNamespace(this);
         this.authServer = new AuthApiNamespace(this, true);
         this.products = new ProductsApiNamespace(this);
@@ -429,13 +260,8 @@ export class SublymusApi {
         this.comments = new CommentsApiNamespace(this);
         this.favorites = new FavoritesApiNamespace(this);
         this.userProfile = new UserProfileApiNamespace(this);
-        this.users = new UsersApiNamespace(this);
-        this.roles = new RolesApiNamespace(this);
         this.inventories = new InventoriesApiNamespace(this);
-        this.stats = new StatsApiNamespace(this);
-        this.general = new GeneralApiNamespace(this);
-        this.debug = new DebugApiNamespace(this);
-    }
+     }
 
     // --- Méthodes Privées/Utilitaires ---
     // _request reste inchangé fonctionnellement mais utilise this.t
@@ -597,288 +423,6 @@ export class SublymusApi {
         }
         return formData;
     }
-    async _prepareMultipleFeaturesValuesData({ currentFeatures, initialFeatures, product_id }: BuildFormDataForFeaturesValuesParam) {
-        if (!currentFeatures) return null;
-        try {
-
-            let send = false;
-
-            const delete_features_id: string[] = []
-            const update_features: Partial<FeatureInterface>[] = []
-            const create_features: Partial<FeatureInterface>[] = []
-            const values: Record<string, Partial<{
-                create_values: Partial<ValueInterface>[],
-                update_values: Partial<ValueInterface>[],
-                delete_values_id: string[],
-            }>> = {}
-
-            const next_f: Partial<FeatureInterface>[] = []
-            for (const f of currentFeatures) {
-                if (!f.id) continue
-                if (f._request_mode == 'new') {
-                    create_features.push(f);
-                    send = true
-                } else {
-                    next_f.push(f)
-                }
-            }
-
-
-            for (const initial_f of initialFeatures) {
-                const current_f = (next_f || []).find(f => initial_f.id == f.id);
-                if (!current_f) {
-                    initial_f.id && delete_features_id.push(initial_f.id);
-                    send = true
-                    continue
-                }
-                if (!current_f.id) continue
-                const next_v: Partial<ValueInterface>[] = []
-                for (const v of current_f.values || []) {
-                    if (v._request_mode == 'new') {
-                        if (!values[current_f.id]) values[current_f.id] = {};
-                        if (!values[current_f.id].create_values) values[current_f.id].create_values = []
-                        values[current_f.id].create_values?.push(v);
-                        send = true
-                    } else {
-                        next_v.push(v)
-                    }
-                }
-                console.log(currentFeatures, next_v);
-                for (const i_v of initial_f.values || []) {
-                    const current_v = next_v.find(_v => _v.id == i_v.id);
-                    console.log({ f_if: current_f.id, current_v, v_id: i_v.id });
-
-                    if (!current_v) {
-                        if (!values[current_f.id]) values[current_f.id] = {};
-                        if (!values[current_f.id].delete_values_id) values[current_f.id].delete_values_id = []
-                        values[current_f.id].delete_values_id?.push(i_v.id)
-                        send = true
-                    } else if (current_v._request_mode == 'edited') {
-                        if (!values[current_f.id]) values[current_f.id] = {};
-                        if (!values[current_f.id].update_values) values[current_f.id].update_values = []
-                        values[current_f.id].update_values?.push(current_v);
-                        send = true
-                    }
-                }
-                const need_update = current_f._request_mode == 'edited'
-                if (!need_update) continue
-                update_features.push(current_f);
-                send = true
-            }
-            const multiple_update_features = {
-                delete_features_id: delete_features_id.length > 0 ? delete_features_id : undefined,
-                update_features: update_features.length > 0 ? update_features : undefined,
-                create_features: create_features.length > 0 ? create_features : undefined,
-                values,
-            }
-
-            //  console.log('>>>>>>>3>>>>>>>');
-            if (!send) return null;
-            return multiple_update_features;
-
-        } catch (error) {
-            //  console.log('>>>>>>>2>>>>>>>', error);
-
-            return null
-        }
-    }
-
-
-    // Méthode pour construire le FormData pour multipleUpdateFeaturesValues
-    async _buildFormDataForFeaturesValues(params: PrepareMultipleFeaturesValuesParams): Promise<FormData | null> {
-        const multipleUpdateData = await this._prepareMultipleFeaturesValuesData(params);
-
-        console.log('>>>>>>>>>>>>>>', multipleUpdateData);
-
-
-        if (!multipleUpdateData) return null;
-
-        if (!params.product_id) throw new Error('product_id is required, for Multuple update feature values ')
-        const formData = new FormData();
-        formData.append('product_id', params.product_id);
-        // La fonction _buildFormData gère la conversion des fichiers et la MAJ de l'objet
-        // Nous devons donc recréer le JSON *après* le traitement des fichiers.
-
-        // Fonction interne pour traiter les fichiers d'une Value (similaire à celle dans _buildFormData)
-        const processValueFiles = (value: Partial<ValueInterface>) => {
-            if (!value.id) return;
-            (['icon', 'views'] as const).forEach((fileKey) => {
-                const files = value[fileKey];
-                if (!Array.isArray(files)) return;
-                const pseudoPaths: string[] = [];
-                let fileIndex = 0;
-                files.forEach((fileOrUrl) => {
-                    if ((fileOrUrl instanceof File) || (fileOrUrl instanceof Blob)) {
-                        const fieldName = `${(value.id || '').replace('.', '')}:${fileKey}_${fileIndex++}`;
-                        formData.append(fieldName, fileOrUrl);
-                        pseudoPaths.push(fieldName);
-                    } else if (typeof fileOrUrl === 'string' && fileOrUrl !== '') {
-                        pseudoPaths.push(fileOrUrl);
-                    }
-                });
-                // Muter l'objet `value` dans `multipleUpdateData`
-                value[fileKey] = pseudoPaths;
-            });
-        };
-
-        // Parcourir les creates/updates pour trouver et traiter les fichiers DANS multipleUpdateData
-        Object.values((multipleUpdateData as any).values || {}).forEach((vData: any) => {
-            (vData.create_values || []).forEach(processValueFiles);
-            (vData.update_values || []).forEach(processValueFiles);
-        });
-        ((multipleUpdateData as any).create_features || []).forEach((f: any) => {
-            (f.values || []).forEach(processValueFiles);
-            // Traiter aussi l'icône de la feature si elle existe et est un fichier
-            if (f.icon && Array.isArray(f.icon) && f.icon[0] instanceof File) {
-                const fieldName = `${(f.id || '').replace('.', '')}:icon_0`;
-                formData.append(fieldName, f.icon[0]);
-                f.icon = [fieldName]; // Remplacer par pseudo-path
-            }
-        });
-        ((multipleUpdateData as any).update_features || []).forEach((f: any) => {
-            // Traiter aussi l'icône de la feature si elle existe et est un fichier
-            if (f.icon && Array.isArray(f.icon) && f.icon[0] instanceof File) {
-                const fieldName = `${(f.id || '').replace('.', '')}:icon_0`;
-                formData.append(fieldName, f.icon[0]);
-                f.icon = [fieldName]; // Remplacer par pseudo-path
-            }
-        });
-
-        // Envoyer l'objet JSON mis à jour (avec les pseudo-paths)
-        formData.append('multiple_update_features', JSON.stringify(multipleUpdateData));
-        return formData;
-    }
-} // Fin Classe SublymusApi (Partie 1)
-
-
-// ==================================
-// == Namespace pour Theme ==
-// ==================================
-class ThemeNamespace {
-    private _api: SublymusApi;
-    constructor(apiInstance: SublymusApi) { this._api = apiInstance; }
-
-    getList(params: GetThemesParams = {}): Promise<GetThemesResponse> {
-        // L'API s_server /themes retourne une structure ListType<ThemeInterface>
-        return this._api._request('/{{main_server}}/themes', { method: 'GET', params });
-    }
-
-    getOne({ theme_id }: GetThemeParams): Promise<GetThemeResponse | null> {
-        if (!theme_id) throw new ApiError(this._api.t('api.missingParam', { param: 'theme_id' }), 400);
-        // L'API s_server /themes/:id retourne directement l'objet ThemeInterface ou 404
-        return this._api._request(`/{{main_server}}/themes/${theme_id}`, { method: 'GET' });
-    }
-    async activateForStore({ store_id, themeId }: ChangeThemeParams): Promise<ChangeThemeResponse> {
-        return this._api.store.changeTheme({ store_id, themeId });
-    }
-
-    /**
-     * Récupère les paramètres/options de personnalisation pour un thème donné.
-     * (Nécessiterait un endpoint dédié sur s_server ou l'API du thème)
-     */
-    // async getCustomizationOptions({ theme_id }: GetThemeParams): Promise<any> {
-    //    return this._api._request(`/{{main_server}}/themes/${theme_id}/options`, { method: 'GET' });
-    // }
-
-    /**
-     * Sauvegarde les paramètres de personnalisation d'un thème pour un store donné.
-     * (Nécessiterait un endpoint dédié sur s_server ou l'API du thème)
-     */
-    // async saveCustomization({ store_id, theme_id, settings }: { store_id: string, theme_id: string, settings: any }): Promise<MessageResponse> {
-    //    return this._api._request(`/{{main_server}}/stores/${store_id}/themes/${theme_id}/settings`, { method: 'PUT', body: settings });
-    // }
-
-}
-
-// ==================================
-// == Namespace pour Store ==
-// ==================================
-class StoreNamespace {
-    private _api: SublymusApi;
-    constructor(apiInstance: SublymusApi) { this._api = apiInstance; }
-
-
-    async getList(params: GetStoresParams = {}): Promise<GetStoresResponse> {
-        // Note: L'API s_server /stores retourne directement la liste et la méta attendue par ListType
-        return this._api._request('/{{main_server}}/stores', { method: 'GET', params });
-    }
-
-    getOne({ store_id }: GetStoreParams): Promise<GetStoreResponse | null> {
-        // Note: L'API s_server /stores/:store_id retourne directement l'objet StoreInterface
-        return this._api._request(`/{{main_server}}/stores/${store_id}`, { method: 'GET' });
-    }
-
-    async create(data: CreateStoreParams): Promise<CreateStoreResponse> {
-        const formData = await this._api._buildFormData({ data, dataFilesFelds: ['logo', 'cover_image'] });
-        // L'API s_server /stores retourne { message, store }
-        return this._api._request('/{{main_server}}/stores', { method: 'POST', body: formData, isFormData: true });
-    }
-
-    async update({ store_id, data }: UpdateStoreParams): Promise<UpdateStoreResponse> {
-        if (!store_id) throw new ApiError(this._api.t('api.missingId', { entity: 'store' }), 400); // Validation ID
-        const formData = await this._api._buildFormData({ data, dataFilesFelds: ['logo', 'cover_image', 'favicon'] });
-        // L'API s_server /stores/:id retourne { message, store }
-        return this._api._request(`/{{main_server}}/stores/${store_id}`, { method: 'PUT', body: formData, isFormData: true });
-    }
-
-    async delete({ store_id }: DeleteStoreParams): Promise<DeleteStoreResponse> {
-        if (!store_id) throw new ApiError(this._api.t('api.missingId', { entity: 'store' }), 400);
-        // L'API s_server /stores/:store_id retourne { message, isDeleted? }
-        return this._api._request(`/{{main_server}}/stores/${store_id}`, { method: 'DELETE' });
-    }
-
-    async changeTheme({ store_id, themeId }: ChangeThemeParams): Promise<ChangeThemeResponse> {
-        if (!store_id) throw new ApiError(this._api.t('api.missingId', { entity: 'store' }), 400);
-        // L'API s_server attend theme_id dans le body
-        return this._api._request(`/{{main_server}}/stores/${store_id}/change_theme`, { method: 'POST', body: { theme_id: themeId } });
-    }
-
-    async updateStatus({ store_id, isActive }: UpdateStoreStatusParams): Promise<UpdateStoreStatusResponse> {
-        if (!store_id) throw new ApiError(this._api.t('api.missingId', { entity: 'store' }), 400);
-        // L'API s_server attend is_active dans le body?
-        return this._api._request(`/{{main_server}}/stores/${store_id}/status`, { method: 'POST', body: { is_active: isActive } });
-    }
-
-    async start({ store_id }: StoreActionParams): Promise<StoreActionResponse> {
-        if (!store_id) throw new ApiError(this._api.t('api.missingId', { entity: 'store' }), 400);
-        return this._api._request(`/{{main_server}}/stores/${store_id}/start`, { method: 'POST' });
-    }
-
-    async stop({ store_id }: StoreActionParams): Promise<StoreActionResponse> {
-        if (!store_id) throw new ApiError(this._api.t('api.missingId', { entity: 'store' }), 400);
-        return this._api._request(`/{{main_server}}/stores/${store_id}/stop`, { method: 'POST' });
-    }
-
-    async restart({ store_id }: StoreActionParams): Promise<StoreActionResponse> {
-        if (!store_id) throw new ApiError(this._api.t('api.missingId', { entity: 'store' }), 400);
-        return this._api._request(`/{{main_server}}/stores/${store_id}/restart`, { method: 'POST' });
-    }
-
-    async scale(params: { store_id: string; /* scale params */ }): Promise<StoreActionResponse> {
-        const { store_id, ...scaleParams } = params;
-        if (!store_id) throw new ApiError(this._api.t('api.missingId', { entity: 'store' }), 400);
-        // L'API s_server attend les paramètres de scale dans le body?
-        return this._api._request(`/{{main_server}}/stores/${store_id}/scale`, { method: 'POST', body: scaleParams });
-    }
-
-    async addDomain({ store_id, domainName }: ManageDomainParams): Promise<ManageDomainResponse> {
-        if (!store_id) throw new ApiError(this._api.t('api.missingId', { entity: 'store' }), 400);
-        // L'API s_server attend domain_name dans le body
-        return this._api._request(`/{{main_server}}/stores/${store_id}/domains`, { method: 'POST', body: { domain_name: domainName } });
-    }
-
-    async removeDomain({ store_id, domainName }: ManageDomainParams): Promise<ManageDomainResponse> {
-        if (!store_id) throw new ApiError(this._api.t('api.missingId', { entity: 'store' }), 400);
-        if (!domainName) throw new ApiError(this._api.t('api.missingParam', { param: 'domainName' }), 400); // Valider domainName
-        // L'API s_server : passer domain_name en query param?
-        return this._api._request(`/{{main_server}}/stores/${store_id}/domains`, { method: 'DELETE', params: { domain_name: domainName } });
-    }
-
-    async checkAvailableName({ name }: AvailableNameParams): Promise<AvailableNameResponse> {
-        if (!name) throw new ApiError(this._api.t('api.missingParam', { param: 'name' }), 400);
-        // L'API s_server attend name en query param
-        return this._api._request('/{{main_server}}/stores/utils/available_name', { method: 'GET', params: { name } });
-    }
 }
 
 
@@ -982,46 +526,11 @@ class ProductsApiNamespace {
         return result?.list?.[0] ?? null;
     }
 
-    async create(params: CreateProductParams): Promise<CreateProductResponse> {
-        // _buildFormData gère déjà la structure { product, views }
-        const formData = await this._api._buildFormData({ data: params.product, files: { views: params.views || [] }, dataFilesFelds: ['views'] }); // Assumer 'views' est la clé pour les fichiers
-        return this._api._request('/v1/products', { method: 'POST', body: formData, isFormData: true });
-    }
-
-    async update(params: UpdateProductParams): Promise<UpdateProductResponse> { // 2 - Type Params modifié
-        const { product_id, data } = params;
-        if (!product_id) throw new Error("Product ID is required for update.");
-        const formData = await this._api._buildFormData({ data: data }); // Ajouter product_id au corps si API l'attend là
-        // Appel PUT sur /v1/products/:id (l'API doit lire l'ID de l'URL)
-        // Ici, l'ancien contrôleur attendait product_id dans le body, on garde ça pour l'instant
-        return this._api._request(`/v1/products/${product_id}`, { method: 'PUT', body: formData, isFormData: true });
-        //   return this._api._request(`/v1/products/${product_id}`, { method: 'PUT', body: data }); // TEMP: Envoyer JSON si pas de fichiers pour l'instant
-    }
-
-    async delete(productId: string): Promise<DeleteProductResponse> {
-        return this._api._request(`/v1/products/${productId}`, { method: 'DELETE' });
-    }
-
-    // Méthode pour multipleUpdateFeaturesValues
-    async multipleUpdateFeaturesValues(params: { product_id: string, currentFeatures: Partial<FeatureInterface>[], initialFeatures: Partial<FeatureInterface>[] }): Promise<MultipleUpdateFeaturesValuesResponse> {
-        const formData = await this._api._buildFormDataForFeaturesValues(params);
-        if (!formData) return Promise.reject(new ApiError(this._api.t('feature.multipleUpdateFailed'), 400));
-        return this._api._request('/v1/features/multiple-updates', { method: 'POST', body: formData, isFormData: true });
-    }
 }
-// --- Fin Partie 1/3 ---
-
-// src/api/SublymusApi.ts
-// ... (Imports, Types, Classe SublymusApi, Constructeur, _request, _buildFormData, _prepare..., _buildFormDataForFeatures, Namespaces Auth & Products) ...
-
 
 // ===========================
 // == Namespace Catégories ==
 // ===========================
-// 2 - Définir types Params/Response spécifiques pour Update/Create
-export type CreateCategoryParams = { data: Partial<CategoryInterface> }; // Fichiers gérés par _buildFormData
-export type UpdateCategoryParams = { data: Partial<CategoryInterface>, category_id: string };
-export type DeleteCategoryParams = { category_id: string };
 
 class CategoriesApiNamespace {
     private _api: SublymusApi;
@@ -1038,22 +547,6 @@ class CategoriesApiNamespace {
         return result?.list?.[0] ?? null;
     }
 
-    async create(params: CreateCategoryParams): Promise<CreateCategoryResponse> {
-        const formData = await this._api._buildFormData({ data: params.data, dataFilesFelds: ['view', 'icon'] });
-        return this._api._request('/v1/categories', { method: 'POST', body: formData, isFormData: true });
-    }
-
-    async update(params: UpdateCategoryParams): Promise<UpdateCategoryResponse> { // 2 - Type Params modifié
-        // 1 - Adapter URL (utilise ID dans l'URL)
-        const { category_id, data } = params;
-        const formData = await this._api._buildFormData({ data, dataFilesFelds: ['view', 'icon'] });
-        return this._api._request(`/v1/categories/${category_id}`, { method: 'PUT', body: formData, isFormData: true });
-    }
-
-    async delete(params: DeleteCategoryParams): Promise<DeleteCategoryResponse> { // 2 - Type Params modifié
-        const { category_id } = params;
-        return this._api._request(`/v1/categories/${category_id}`, { method: 'DELETE' });
-    }
 
     getSubCategories(params: GetSubCategoriesParams): Promise<GetSubCategoriesResponse> {
         return this._api._request('/v1/categories/sub-categories', { method: 'GET', params });
@@ -1106,12 +599,6 @@ class FeaturesApiNamespace {
 export type GetValuesParams = { feature_id?: string; value_id?: string; text?: string; page?: number; limit?: number; };
 export type GetValueResponse = ValueInterface | null;
 export type GetValuesResponse = ListType<ValueInterface>;
-export type CreateValueParams = { data: Partial<ValueInterface> & { feature_id: string } }; // feature_id requis
-export type CreateValueResponse = { message?: string; value: ValueInterface }; // Ajouter message?
-export type UpdateValueParams = { data: Partial<ValueInterface>, value_id: string };
-export type UpdateValueResponse = { message?: string; value: ValueInterface };
-export type DeleteValueParams = { value_id: string };
-export type DeleteValueResponse = DeleteResponse; // Retourne 204
 
 class ValuesApiNamespace {
     private _api: SublymusApi;
@@ -1127,22 +614,6 @@ class ValuesApiNamespace {
         return result?.list?.[0] ?? null;
     }
 
-    async create(params: CreateValueParams): Promise<CreateValueResponse> {
-        const formData = await this._api._buildFormData({ data: params.data, dataFilesFelds: ['icon', 'views'] });
-        return this._api._request('/v1/values', { method: 'POST', body: formData, isFormData: true });
-    }
-
-    async update(params: UpdateValueParams): Promise<UpdateValueResponse> { // 2 - Type Params modifié
-        // 1 - Adapter URL (utilise ID dans l'URL)
-        const { value_id, data } = params;
-        const formData = await this._api._buildFormData({ data, dataFilesFelds: ['icon', 'views'] }); // Ajouter value_id au corps si API l'attend là
-        return this._api._request(`/v1/values/${value_id}`, { method: 'PUT', body: formData, isFormData: true });
-    }
-
-    async delete(params: DeleteValueParams): Promise<DeleteValueResponse> { // 2 - Type Params modifié
-        const { value_id } = params;
-        return this._api._request(`/v1/values/${value_id}`, { method: 'DELETE' }); // Retourne 204
-    }
 }
 
 
@@ -1154,10 +625,6 @@ export type GetDetailParams = { detail_id: string };
 export type GetDetailResponse = DetailInterface | null;
 export type GetDetailListParams = { product_id?: string; page?: number; limit?: number; order_by?: string };
 export type GetDetailListResponse = ListType<DetailInterface>;
-export type CreateDetailParams = { data: Partial<DetailInterface> };
-export type UpdateDetailParams = { data: Partial<DetailInterface>, detail_id: string };
-export type DeleteDetailParams = { detail_id: string };
-
 class DetailsApiNamespace {
     private _api: SublymusApi;
     constructor(apiInstance: SublymusApi) { this._api = apiInstance; }
@@ -1172,22 +639,6 @@ class DetailsApiNamespace {
         return result?.list?.[0] ?? null;
     }
 
-    async create(params: CreateDetailParams): Promise<CreateDetailResponse> {
-        const formData = await this._api._buildFormData({ data: params.data, dataFilesFelds: ['view'] });
-        return this._api._request('/v1/details', { method: 'POST', body: formData, isFormData: true });
-    }
-
-    async update(params: UpdateDetailParams): Promise<UpdateDetailResponse> { // 2 - Type Params modifié
-        // 1 - Adapter URL (utilise ID dans l'URL)
-        const { detail_id, data } = params;
-        const formData = await this._api._buildFormData({ data, dataFilesFelds: ['view'] });
-        return this._api._request(`/v1/details/${detail_id}`, { method: 'PUT', body: formData, isFormData: true });
-    }
-
-    async delete(params: DeleteDetailParams): Promise<DeleteDetailResponse> { // 2 - Type Params modifié
-        const { detail_id } = params;
-        return this._api._request(`/v1/details/${detail_id}`, { method: 'DELETE' });
-    }
 }
 
 // ==================================
@@ -1197,13 +648,6 @@ class ProductFaqsApiNamespace {
     private _api: SublymusApi;
     constructor(apiInstance: SublymusApi) { this._api = apiInstance; }
 
-    /**
-     * Create a new FAQ for a product.
-     * POST /v1/product-faqs
-     */
-    create(params: CreateProductFaqParams): Promise<CreateProductFaqResponse> {
-        return this._api._request('/v1/product-faqs', { method: 'POST', body: params.data });
-    }
 
     /**
      * List FAQs for a specific product.
@@ -1221,25 +665,6 @@ class ProductFaqsApiNamespace {
         return this._api._request(`/v1/product-faqs/${faqId}`, { method: 'GET' });
     }
 
-    /**
-     * Update an existing FAQ.
-     * PUT /v1/product-faqs/{faqId}
-     */
-    update({ faqId, data }: UpdateProductFaqParams): Promise<UpdateProductFaqResponse> {
-        return this._api._request(`/v1/product-faqs/${faqId}`, { method: 'PUT', body: data });
-    }
-
-    reorder(params: ReorderProductFaqsParams): Promise<ReorderProductFaqsResponse> {
-        return this._api._request('/v1/product-faqs/reorder', { method: 'POST', body: params });
-    }
-
-    /**
-     * Delete a FAQ.
-     * DELETE /v1/product-faqs/{faqId}
-     */
-    delete({ faqId }: DeleteProductFaqParams): Promise<DeleteProductFaqResponse> {
-        return this._api._request(`/v1/product-faqs/${faqId}`, { method: 'DELETE' });
-    }
 }
 
 
@@ -1249,15 +674,6 @@ class ProductFaqsApiNamespace {
 class ProductCharacteristicsApiNamespace {
     private _api: SublymusApi;
     constructor(apiInstance: SublymusApi) { this._api = apiInstance; }
-
-    /**
-     * Create a new characteristic for a product.
-     * POST /v1/product-characteristics
-     */
-    async create(params: CreateProductCharacteristicParams): Promise<CreateProductCharacteristicResponse> {
-        const formData = await this._api._buildFormData({ data: params.data, dataFilesFelds: ['icon'] });
-        return await this._api._request('/v1/product-characteristics', { method: 'POST', body: formData, isFormData: true });
-    }
 
     /**
      * List characteristics for a specific product.
@@ -1279,22 +695,6 @@ class ProductCharacteristicsApiNamespace {
         return this._api._request(`/v1/product-characteristics/${characteristicId}`, { method: 'GET' });
     }
 
-    /**
-     * Update an existing characteristic.
-     * PUT /v1/product-characteristics/{characteristicId}
-     */
-    async update({ characteristicId, data }: UpdateProductCharacteristicParams): Promise<UpdateProductCharacteristicResponse> {
-        const formData = await this._api._buildFormData({ data, dataFilesFelds: ['icon'] });
-        return this._api._request(`/v1/product-characteristics/${characteristicId}`, { method: 'PUT', body: formData, isFormData: true });
-    }
-
-    /**
-     * Delete a characteristic.
-     * DELETE /v1/product-characteristics/{characteristicId}
-     */
-    delete({ characteristicId }: DeleteProductCharacteristicParams): Promise<DeleteProductCharacteristicResponse> {
-        return this._api._request(`/v1/product-characteristics/${characteristicId}`, { method: 'DELETE' });
-    }
 }
 
 // ========================
@@ -1304,7 +704,6 @@ class ProductCharacteristicsApiNamespace {
 export type GetOrderParams = { order_id: string; with_items?: boolean }; // Pour getOne
 export type GetOrderResponse = CommandInterface | null;
 // GetMyOrdersParams, GetMyOrdersResponse, GetAllOrdersResponse, UpdateOrderStatusParams, UpdateOrderStatusResponse, DeleteOrderResponse déjà définis
-export type DeleteOrderParams = { order_id: string };
 
 class OrdersApiNamespace {
     private _api: SublymusApi;
@@ -1335,11 +734,6 @@ class OrdersApiNamespace {
         // 1 - Adapter URL (utilise ID dans l'URL)
         const { user_order_id, ...data } = params;
         return this._api._request(`/v1/orders/${user_order_id}/status`, { method: 'PUT', body: data });
-    }
-
-    delete(params: DeleteOrderParams): Promise<DeleteOrderResponse> { // 2 - Type Params modifié
-        const { order_id } = params;
-        return this._api._request(`/v1/orders/${order_id}`, { method: 'DELETE' });
     }
 }
 
@@ -1495,59 +889,11 @@ class UserProfileApiNamespace {
     }
 }
 
-// ==============================
-// == Namespace Users (Admin)  ==
-// ==============================
-class UsersApiNamespace {
-    private _api: SublymusApi;
-    constructor(apiInstance: SublymusApi) { this._api = apiInstance; }
-
-    // 3 - getList (getOne n'est pas défini dans le contrôleur pour l'instant)
-    getList(params: UserFilterType): Promise<GetUsersResponse> {
-        return this._api._request('/v1/users', { method: 'GET', params });
-    }
-    // Ajouter delete si l'API le permet
-    async getUserStats(params: GetUserStatsParams = {}): Promise<GetUserStatsResponse> {
-        // L'API actuelle retourne { stats: {...} }, donc on type le retour global
-        const response = await this._api._request<GetUserStatsResponse>('/v1/stats/clients_stats', { method: 'GET', params });
-        // Retourner un objet vide si la clé 'stats' est manquante pour éviter les erreurs
-        return response ?? { stats: {} };
-    }
-}
-
-// ==============================
-// == Namespace Roles (Admin)  ==
-// ==============================
-// 2 - Types Params
-export type DeleteCollaboratorParams = { user_id: string };
-
-class RolesApiNamespace {
-    private _api: SublymusApi;
-    constructor(apiInstance: SublymusApi) { this._api = apiInstance; }
-
-    // 3 - getList (pas de getOne pour les roles/collaborateurs)
-    getCollaborators(params: GetCollaboratorsParams): Promise<GetCollaboratorsResponse> {
-        return this._api._request('/v1/roles/collaborators', { method: 'GET', params });
-    }
-    createCollaborator(params: CreateCollaboratorParams): Promise<CreateCollaboratorResponse> {
-        return this._api._request('/v1/roles/collaborators', { method: 'POST', body: params }); // POST est plus standard
-    }
-    updatePermissions(params: UpdateCollaboratorParams): Promise<UpdateCollaboratorResponse> {
-        return this._api._request('/v1/roles/collaborators/permissions', { method: 'POST', body: params });
-    }
-    removeCollaborator(params: DeleteCollaboratorParams): Promise<RemoveCollaboratorResponse> { // 2 - Type Params modifié
-        const { user_id } = params;
-        return this._api._request(`/v1/roles/collaborators/${user_id}`, { method: 'DELETE' });
-    }
-}
 
 // ========================
 // == Namespace Inventaires ==
 // ========================
 // 2 - Types Params
-export type CreateInventoryParams = { data: Partial<Inventory> };
-export type UpdateInventoryParams = { data: Partial<Inventory>, inventory_id: string };
-export type DeleteInventoryParams = { inventory_id: string };
 export type GetInventoryResponse = Inventory | null;
 
 
@@ -1563,110 +909,7 @@ class InventoriesApiNamespace {
         // Utilise l'endpoint /:id
         return this._api._request<Inventory>(`/v1/inventories/${params.inventory_id}`, { method: 'GET' });
     }
-
-    async create(params: CreateInventoryParams): Promise<InventoryResponse> {
-        const formData = await this._api._buildFormData({ data: params.data, dataFilesFelds: ['views'] });
-        return this._api._request('/v1/inventories', { method: 'POST', body: formData, isFormData: true });
-    }
-    async update(params: UpdateInventoryParams): Promise<InventoryResponse> { // 2 - Type Params modifié
-        const { inventory_id, data } = params;
-        const formData = await this._api._buildFormData({ data, dataFilesFelds: ['views'] });
-        return this._api._request(`/v1/inventories/${inventory_id}`, { method: 'PUT', body: formData, isFormData: true });
-    }
-    async delete(params: DeleteInventoryParams): Promise<DeleteInventoryResponse> { // 2 - Type Params modifié
-        const { inventory_id } = params;
-        return this._api._request(`/v1/inventories/${inventory_id}`, { method: 'DELETE' });
-    }
 }
 
-// ===========================
-// == Namespace Statistiques ==
-// ===========================
-class StatsApiNamespace {
-    private _api: SublymusApi;
-    constructor(apiInstance: SublymusApi) { this._api = apiInstance; }
-
-    async getKpis(params: BaseStatsParams = {}): Promise<KpiStatsResponse> {
-        return this._api._request('/v1/stats/kpi', { method: 'GET', params });
-    }
-
-    async getVisitDetails(params: BaseStatsParams & { include?: VisitStatsIncludeOptions } = {}): Promise<VisitStatsResponse> {
-        const apiParams: Record<string, any> = { ...params };
-
-        // 💡 Correction ici : transformer l'objet include en un tableau de clés actives
-        if (params.include) {
-            const includedDimensions: string[] = [];
-            Object.entries(params.include).forEach(([key, value]) => {
-                if (value === true) {
-                    includedDimensions.push(key);
-                }
-            });
-            if (includedDimensions.length > 0) {
-                // Assigner le tableau à la clé 'include'
-                apiParams.include = includedDimensions;
-            }
-            // Pas besoin de supprimer params.include, car apiParams est une copie
-        }
-        // L'API backend /stats/visits ne semble pas utiliser le param 'stats', le retirer
-        delete apiParams.stats;
-
-        return this._api._request('/v1/stats/visits', { method: 'GET', params: apiParams });
-    }
-
-    async getOrderDetails(params: BaseStatsParams & { include?: OrderStatsIncludeOptions } = {}): Promise<OrderStatsResponse> {
-        const apiParams: Record<string, any> = { ...params };
-
-        // 💡 Correction ici : transformer l'objet include en un tableau de clés actives
-        if (params.include) {
-            const includedDimensions: string[] = [];
-            Object.entries(params.include).forEach(([key, value]) => {
-                if (value === true) {
-                    includedDimensions.push(key);
-                }
-            });
-            if (includedDimensions.length > 0) {
-                apiParams.include = includedDimensions;
-            }
-        }
-        // L'API backend /stats/orders ne semble pas utiliser le param 'stats', le retirer
-        delete apiParams.stats;
-
-        return this._api._request('/v1/stats/orders', { method: 'GET', params: apiParams });
-    }
-
-    // Garder ou adapter si nécessaire
-    getVisitsSummary(params: { period?: string, user_id?: string }): Promise<any> {
-        return this._api._request('/v1/stats/summary', { method: 'GET', params });
-    }
-
-}
-
-// =========================
-// == Namespace General   ==
-// =========================
-class GeneralApiNamespace {
-    private _api: SublymusApi;
-    constructor(apiInstance: SublymusApi) { this._api = apiInstance; }
-
-    globalSearch(params: GlobalSearchParams): Promise<GlobalSearchResponse> {
-        return this._api._request('/v1/global/search', { method: 'GET', params });
-    }
-    // Implémenter import/export si nécessaire
-}
-
-// ======================
-// == Namespace Debug  ==
-// ======================
-class DebugApiNamespace {
-    private _api: SublymusApi;
-    constructor(apiInstance: SublymusApi) { this._api = apiInstance; }
-
-    requestScaleUp(): Promise<ScaleResponse> {
-        return this._api._request('/v1/debug/scale-up', { method: 'GET' });
-    }
-    requestScaleDown(): Promise<ScaleResponse> {
-        return this._api._request('/v1/debug/scale-down', { method: 'GET' });
-    }
-}
 
 // --- Fin de la classe et des namespaces --- 

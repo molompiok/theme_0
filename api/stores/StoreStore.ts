@@ -1,12 +1,12 @@
 //pages/stores/StoreStore.ts
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
-import { ListType, StoreInterface } from "../Interfaces/Interfaces";
+import { ListType } from "../Interfaces/Interfaces";
 
 import { Transmit } from '@adonisjs/transmit-client'
 import { Data } from "../../renderer/AppStore/Data";
 
-export { useGlobalStore, getTransmit }
+export { getTransmit }
 
 let transmit: Transmit | null = null;
 let baseUrl = ''
@@ -32,40 +32,3 @@ function getTransmit(url: string): Transmit | null {
 
     return transmit
 }
-const useGlobalStore = create(combine({
-    _current: undefined as StoreInterface | undefined,
-    stores: undefined as ListType<StoreInterface> | undefined,
-    currentStore: undefined as StoreInterface | undefined,
-}, (set, get) => ({
-    async testSSE() {
-        if (!useGlobalStore.getState().currentStore?.url) {
-            console.log('-------useGlobalStore .getState().currentStore?.url----', useGlobalStore.getState().currentStore);
-            return
-        }
-        const response = await fetch(`${useGlobalStore.getState().currentStore?.url}/test_sse`)
-
-    },
-    setCurrentStore(currentStore: StoreInterface | undefined) {
-        Data.apiUrl =  currentStore?.api_url
-        set(() => ({ currentStore: currentStore }));
-        if (currentStore)
-            localStorage.setItem('current_store', JSON.stringify(currentStore));
-        else {
-            localStorage.removeItem('current_store');
-            return;
-        }
-    },
-    getCurrentStore() {
-        let c = get().currentStore;
-        if (c) return c
-        try {
-            const a = localStorage.getItem('current_store');
-            c = a && JSON.parse(a);
-           console.log(c);
-            set(() => ({ currentStore: c }));
-            return c
-        } catch (error) { }
-        return 
-    },
-})));
-

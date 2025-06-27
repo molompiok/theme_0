@@ -1,114 +1,8 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
-// Interface ThemeSettings (rappel, tu l'as déjà définie)
-export interface ThemeSettings {
-    general?: { // Nouvelle section pour les paramètres globaux
-        primaryColor?: string;
-        secondaryColor?: string;
-        backgroundColor?: string; // Couleur de fond du contenu principal des pages
-        textColor?: string;       // Couleur de texte principale
-        bodyFont?: string;
-        headingFont?: string;
-        baseFontSize?: string; // ex: "16px"
-        borderRadius?: string; // ex: "0.5rem" pour les coins arrondis des cartes, boutons etc.
-        darkMode?: {
-            enabled: false,
-            primaryColor?: string;
-            secondaryColor?: string;
-            backgroundColor?: string;
-            textColor?: string;
-        }
-    };
-    header?: {
-        show?: boolean;
-        backgroundColor?: string;
-        textColor?: string;
-        logoUrl?: string[]; // Peut être vide si l'Owner n'a pas de logo
-        showStoreName?: boolean;
-        navLinks?: { labelKey: string; href: string; isButton?: boolean }[];
-    };
-    announcementBar?: {
-        show?: boolean;
-        messages?: string[]; // Pour un carrousel de messages
-        textColor?: string;
-        backgroundColor?: string;
-        animationSpeed?: number; // en ms
-    };
-    homePage?: {
-        displayProductCount?: number;
-        defaultCategoryIdForProducts?: string | null;
-        productDisplayLayouts?: { imagePosition: 'left' | 'right' | 'overlay'; textOverlay?: boolean }[];
-        alternateLayouts?: boolean;
-        fallbackLayout?: { imagePosition: 'left' | 'right' | 'overlay'; textOverlay?: boolean };
-        showFeaturedTitleKey?: string; // Clé i18n pour le titre de la section des produits mis en avant
-        recommendedProductsSectionTitleKey?: string; // Clé i18n pour la section "recommandations" (page produit)
-    };
-    productCard?: { // Styles pour les cartes produit dans les listes
-        priceBeforeName:boolean,
-        backgroundColor?: string;
-        textColor?: string;
-        priceColor?: string;
-        showRating?: boolean;
-        reductionDisplay?: "barred-price" | "percent-reduction" | "none";
-        favoriteIconPosition?: "top-right" | "bottom-right" | "bottom-left" | "top-left" | "none";
-        addToCartButtonStyle?: 'none'|"icon" | "text" | "icon-text";
-        addToCartBackgroundColor?: string;
-        addToCartTextColor?: string;
-        addToCartBorderColor?: string;
-    };
-    productPage?: { // Settings spécifiques à la page détail produit
-        showRating?: boolean;
-        galleryLayout?: "thumbnails-left" | "thumbnails-bottom" | "stacked-scroll" | "grid";
-        showShareButtons?: boolean;
-        relatedProductsCount?: number; // Combien de produits "recommandés" afficher
-    };
-    filterSide?: { // Si tu as une sidebar de filtres sur une page de listing
-        show?: boolean;
-        textColor?: string;
-        backgroundColor?: string;
-        layout?: "row" | "grid" | "bento" | "compact" | "horizontal-scroll" | "card" | "stacked-list"; // Ce type est très varié, à simplifier peut-être
-    };
-    footer?: {
-        show?: boolean;
-        backgroundColor?: string;
-        textColor?: string;
-        font?: string;
-        layout?: 'simple' | 'multi-column';
-        sections?: { titleKey: string; contentKey?: string; links?: { labelKey: string; href: string }[] }[];
-        copyrightTextKey?: string;
-        showSocialIcons?: boolean;
-        socialLinks?: { platform: 'facebook' | 'instagram' | 'twitter' | 'tiktok'; url: string }[];
-    };
-    backgroundContainer?: {
-        type?: "solid" | "gradient" | "image" | "particles";
-        solidColor?: string;
-        gradientColors?: string[]; // Au moins deux couleurs
-        gradientDirection?: string; // ex: "to right", "to bottom right", "45deg"
-        imageUrl?: string; // Chemin relatif ou URL complète
-        imageOpacity?: number; // 0 à 1
-        particles?: { // Options pour react-tsparticles ou similaire
-            density?: number;
-            color?: string;
-            opacity?: number;
-            size?: number;
-            speed?: number;
-            linkDistance?: number;
-            linkColor?: string;
-            linkOpacity?: number;
-            moveDirection?: string;
-            shape?: string;
-        };
-        animationType?: string; // Pour des animations CSS de fond plus simples
-    };
-    // Anciens champs de premier niveau (à migrer dans les sections si pertinent ou à garder pour compatibilité temporaire)
-    // Pourraient être lus comme fallback si les settings sectionnés ne sont pas trouvés.
-    primaryColor?: string; // DEPRECATED: use general.primaryColor
-    secondaryColor?: string; // DEPRECATED: use general.secondaryColor
-    // ... autres champs de premier niveau que tu avais avant
-}
 
-export const DEFAULT_SETTINGS: ThemeSettings = {
+export const DEFAULT_SETTINGS = {
     general: {
         primaryColor: "#3B82F6",       // Bleu Tailwind (blue-500)
         secondaryColor: "#6B7280",     // Gris Tailwind (gray-500)
@@ -230,6 +124,7 @@ export const DEFAULT_SETTINGS: ThemeSettings = {
     },
 };
 
+export type ThemeSettings = typeof DEFAULT_SETTINGS;
 
 // Logique du store Zustand (tu l'as déjà)
 export const useThemeSettingsStore = create(

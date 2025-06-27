@@ -1,26 +1,7 @@
 
 // api/Interfaces/Interfaces.ts
 
-export interface ReorderProductFaqItem {
-  id: string; // ID de la FAQ
-  index: number; // Nouvel index souhaité
-}
-
-export interface ReorderProductFaqsParams {
-  product_id: string;
-  faqs: ReorderProductFaqItem[];
-  group?: string | null; // Optionnel: pour réordonner au sein d'un groupe
-}
-
-// La réponse pourrait être la liste réordonnée ou juste un message
-export type ReorderProductFaqsResponse = { message: string; faqs: ListType<ProductFaqInterface> };
-
 export type ProductFaqData = Omit<ProductFaqInterface, 'id' | 'created_at' | 'updated_at' | 'product'>; // Pour la création
-
-export interface CreateProductFaqParams {
-  data: ProductFaqData;
-}
-export type CreateProductFaqResponse = { message: string; faq: ProductFaqInterface };
 
 export interface ListProductFaqsParams {
   product_id: string;
@@ -35,26 +16,9 @@ export interface GetProductFaqParams {
 }
 export type GetProductFaqResponse = ProductFaqInterface | null;
 
-export interface UpdateProductFaqParams {
-  faqId: string;
-  data: Partial<ProductFaqData>; // Tous les champs sont optionnels pour la mise à jour
-}
-export type UpdateProductFaqResponse = { message: string; faq: ProductFaqInterface };
-
-export interface DeleteProductFaqParams {
-  faqId: string;
-}
-export type DeleteProductFaqResponse = { message: string; isDeleted?: boolean };
-
 
 // --- Types pour ProductCharacteristic ---
 export type ProductCharacteristicData = Omit<ProductCharacteristicInterface, 'id' | 'created_at' | 'updated_at' | 'product'>;
-
-export interface CreateProductCharacteristicParams {
-  data: ProductCharacteristicData;
-}
-export type CreateProductCharacteristicResponse = { message: string; characteristic: ProductCharacteristicInterface };
-
 export interface ListProductCharacteristicsParams {
   product_id: string;
   key?: string;
@@ -68,95 +32,12 @@ export interface GetProductCharacteristicParams {
 }
 export type GetProductCharacteristicResponse = ProductCharacteristicInterface | null;
 
-export interface UpdateProductCharacteristicParams {
-  characteristicId: string;
-  data: Partial<ProductCharacteristicData>;
-}
-export type UpdateProductCharacteristicResponse = { message: string; characteristic: ProductCharacteristicInterface };
-
-export interface DeleteProductCharacteristicParams {
-  characteristicId: string;
-}
-export type DeleteProductCharacteristicResponse = { message: string; isDeleted?: boolean };
-
 export type ThemeSettingsValues = Record<string, any>;
 
-
-// --- Types pour Stats (Nouvelle Structure) ---
-export type StatsPeriod = 'day' | 'week' | 'month'; // Utiliser celui de StatsUtils?
-
-// Paramètres communs pour les requêtes stats
-export interface BaseStatsParams {
-  period?: StatsPeriod;
-  start_at?: string; // ISO Date string
-  count?: number;
-  end_at?: string,
-  user_id?: string; // Filtre client
-  product_id?: string; // Filtre produit
-}
-
-// Options Include pour Visites
-export interface VisitStatsIncludeOptions {
-  browser?: boolean;
-  os?: boolean;
-  device?: boolean;
-  landing_page?: boolean;
-  referrer?: boolean;
-}
-
-// Options Include pour Commandes
-export interface OrderStatsIncludeOptions {
-  status?: boolean;
-  payment_status?: boolean;
-  payment_method?: boolean;
-  with_delivery?: boolean;
-}
-
-// Réponse pour KPIs
-export interface KpiStatsResponse {
-  totalRevenue: number;
-  totalOrders: number;
-  totalVisits: number;
-  uniqueVisitors: number; // Clarifier la définition exacte (total période?)
-  conversionRate: number; // En % (ex: 1.23 pour 1.23%)
-  averageOrderValue: number;
-  // Ajouter d'autres KPIs si besoin
-}
-
-// Réponse pour Visites Détaillées
-export interface VisitStatsResultItem {
-  date: string; // Format YYYY-MM-DD ou YYYY-MM
-  visits: number;
-  users_count: number;
-  // Champs optionnels basés sur 'include'
-  browser?: Record<string, number>;
-  os?: Record<string, number>;
-  device?: Record<string, number>;
-  pageUrl?: Record<string, number>;
-  referrer?: Record<string, number>;
-}
-export type VisitStatsResponse = VisitStatsResultItem[]; // Directement le tableau
-
-// Réponse pour Commandes Détaillées
-export interface OrderStatsResultItem {
-  date: string;
-  users_count: number;
-  orders_count: number;
-  total_price: number;
-  items_count: number;
-  return_delivery_price: number;
-  // Champs optionnels basés sur 'include'
-  status?: Record<string, number>;
-  payment_status?: Record<string, number>;
-  payment_method?: Record<string, number>;
-  with_delivery?: Record<string, number>; // Clés 'true'/'false'?
-}
-export type OrderStatsResponse = OrderStatsResultItem[]; // Directement le tableau
-
-// --- Fin Types Stats ---
-
-
 // --- Types pour Auth (Reset/Setup) ---
+
+
+
 export interface ForgotPasswordParams {
   email: string;
   callback_url: string; // URL Frontend pour le lien de reset
@@ -175,33 +56,6 @@ export interface SetupAccountParams {
 }
 export type SetupAccountResponse = MessageResponse; // Simple message de succès a priori
 
-// --- Types pour Collaborateurs (Roles) ---
-export interface CreateCollaboratorParams {
-  email: string;
-  full_name?: string; // Nom optionnel pour création
-}
-
-
-export const JsonRole = {
-  filter_client: '',
-  ban_client: '',
-  filter_collaborator: '',
-  ban_collaborator: '',
-  create_delete_collaborator: '',
-  manage_interface: '',
-  filter_product: '',
-  edit_product: '',
-  create_delete_product: '',
-  manage_scene_product: '',
-  chat_client: '',
-  filter_command: '',
-  manage_command: '',
-} as const 
-
-
-export type TypeJsonRole = {
-  [k in keyof typeof JsonRole]: (typeof JsonRole)[k] extends '' ? boolean : string;
-}
 
 export type AnnimationType = {
   slidesGrid: number[];
@@ -223,126 +77,6 @@ export type ListType<T> = {
     previous_page_url: string | null
   }
 }
-
-export interface StoreFilterType {
-  search?: string;            // Recherche par nom, titre, description?
-  is_active?: boolean // Filtrer par statut actif/inactif
-  // Ajouter d'autres filtres si l'API les supporte (ex: par date d'expiration, plan, etc.)
-  page?: number;
-  limit?: number;
-  order_by?: 'name_asc' | 'name_desc' | 'created_at_asc' | 'created_at_desc' | 'expire_at_asc' | 'expire_at_desc'; // Options de tri possibles
-
-  // Technique (optionnel, si utilisé par le hook)
-  no_save?: boolean; // Pour compatibilité avec l'ancien code Zustand? Généralement pas nécessaire avec React Query.
-}
-
-export interface StoreSetting {
-  legal_name?: string;
-  legal_id?: string;
-  legal_address_street?: string;
-  legal_address_city?: string;
-  legal_address_zip?: string;
-  legal_address_country?: string; // Code ISO du pays (ex: CI, FR)
-  public_email?: string;
-  public_phone?: string;
-  default_locale?: string; // ex: 'fr', 'en'
-  currency?: string; // ex: 'XOF', 'EUR'
-  timezone?: string; // ex: 'Africa/Abidjan', 'Europe/Paris'
-}
-
-// Rappel de l'interface Store (avec ajout potentiel des relations chargées)
-export type StoreInterface = Partial<{
-  id: string;
-  user_id: string;
-  name: string;
-  title?: string; // Peut être null
-  description?: string; // Peut être null
-  slug: string;
-  logo: (string | Blob)[],
-  favicon: (string | Blob)[],
-  cover_image: (string | Blob)[],
-  domain_names?: string[];
-  current_theme_id: string;
-  current_api_id: string; // Corrigé depuis le modèle
-  expire_at: string; // Date ISO string ou null
-  disk_storage_limit_gb: number;
-  is_active: boolean;
-  is_running?: boolean;
-  created_at: string;
-  updated_at: string;
-  url?: string;
-  default_domain: string;
-  api_url: string;
-  timezone?: string,
-  currency?: string,
-  currentApi?: ApiInterface; // Définir ApiInterface
-  currentTheme?: ThemeInterface; // Définir ThemeInterface
-}>
-
-export interface ThemeOptionDefinition {
-  key: string;
-  type: 'color' | 'font' | 'text' | 'select' | 'toggle' | 'image' | string; // Ajouter d'autres types si besoin
-  labelKey: string;
-  defaultValue?: any;
-  options?: { value: string; labelKey: string }[]; // Pour le type 'select'
-  section: string;
-  descriptionKey?: string; // Clé i18n pour l'aide/description
-  // Ajouter d'autres métadonnées si nécessaire (ex: validation, conditions d'affichage)
-}
-
-
-export interface ToggleControlProps {
-  option: ThemeOptionDefinition;
-  value: boolean | undefined | null; // La valeur est booléenne
-  onChange: (key: string, value: boolean) => void;
-}
-
-
-export interface StoreFilterType {
-  search?: string;            // Recherche par nom, titre, description?
-  status?: 'active' | 'inactive' | 'all'; // Filtrer par statut actif/inactif
-  // Ajouter d'autres filtres si l'API les supporte (ex: par date d'expiration, plan, etc.)
-  page?: number;
-  limit?: number;
-  order_by?: 'name_asc' | 'name_desc' | 'created_at_asc' | 'created_at_desc' | 'expire_at_asc' | 'expire_at_desc'; // Options de tri possibles
-
-  // Technique (optionnel, si utilisé par le hook)
-  no_save?: boolean; // Pour compatibilité avec l'ancien code Zustand? Généralement pas nécessaire avec React Query.
-}
-
-export interface ApiInterface {
-
-}
-
-export interface ThemeFilterType {
-  search?: string;
-  page?: number;
-  limit?: number;
-  order_by?: 'name_asc' | 'name_desc' | 'created_at_asc' | 'created_at_desc'; // Options de tri possibles
-}
-
-export interface ThemeInterface { // Ajout interface Theme basée sur modèle
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  preview_images: string[] | null;
-  features: string[] | null;
-  docker_image_name: string;
-  docker_image_tag: string;
-  internal_port: number;
-  source_path: string | null;
-  is_public: boolean;
-  is_active: boolean;
-  is_default: boolean;
-  is_premium: boolean;
-  price: number;
-  creator_id: string | null;
-  createdAt: string;
-  updatedAt: string;
-  fullImageName?: string; // Getter virtuel
-}
-
 
 
 export type CategorySortOptions =
@@ -375,51 +109,7 @@ export interface CategoryFilterType {
   // Technique (optionnel, si utilisé dans le hook useGetCategories)
   no_save?: boolean; // Pourrait indiquer de ne pas mettre à jour un store Zustand (si encore utilisé)
 }
-export type PeriodType = 'day' | 'week' | 'month';
 
-export type StatParamType = Partial<{
-  period: PeriodType,
-  stats: ('visits_stats' | 'order_stats')[],
-  product_id: string
-  user_id: string,
-  device: true | undefined,
-  os: true | undefined,
-  page_url: true | undefined,
-  referrer: true | undefined,
-  browser: true | undefined,
-  status: true | undefined,
-  payment_method: true | undefined,
-  payment_status: true | undefined,
-  with_delivery: true | undefined
-}
->
-
-export interface StatsData {
-  visits_stats?: Array<{
-    date: string;
-    visits: number;
-    users_count: number;
-    browser?: Record<string, number>;
-    os?: Record<string, number>;
-    device?: Record<string, number>;
-    pageUrl?: Record<string, number>;
-    [key: string]: any;
-  }>;
-
-  order_stats?: Array<{
-    date: string;
-    users_count: number;
-    orders_count: number;
-    total_price: number;
-    items_count: number;
-    return_delivery_price: number;
-    status?: Record<string, number>;
-    payment_status?: Record<string, number>;
-    payment_method?: Record<string, number>;
-    with_delivery?: Record<string, number>;
-    [key: string]: any;
-  }>;
-}
 
 
 export interface CommentInterface {
@@ -479,22 +169,6 @@ export type FilterType = {
   search?: string
 };
 
-export type CommandFilterType = Partial<{
-  command_id: string,
-  user_id: string,
-  order_by?: "date_desc" | "date_asc" | "total_price_desc" | "total_price_asc" | undefined,
-  page: number,
-  product_id: string,
-  limit: number,
-  no_save: boolean,
-  status: string[],
-  min_price: number | undefined,
-  max_price: number | undefined,
-  min_date: string | undefined,
-  max_date: string | undefined,
-  with_items: boolean,
-  search?: string
-}>
 export type UserFilterType = Partial<{
   // role:'client'|'collaborator'|'admin'|'team',
   with_client_role: boolean,
@@ -519,29 +193,6 @@ export type UserFilterType = Partial<{
   search?: string
 }>
 
-export type UpdateValue = {
-  update: Partial<ValueInterface>[],
-  create: Partial<ValueInterface>[],
-  delete: string[],
-}
-
-export type UpdateFeature = {
-  update: Partial<FeatureInterface>[],
-  create: Partial<FeatureInterface>[],
-  delete: string[],
-}
-
-
-export interface ResetPasswordParams {
-  token: string;
-  password: string;
-  password_confirmation: string;
-}
-
-export interface ForgotPasswordParams {
-  email: string;
-  callback_url: string;
-}
 
 export type MessageResponse = { message: string };
 
@@ -561,12 +212,10 @@ export interface UserInterface {
   password: string,
   photo?: (string | Blob)[] | null,
   locale: string
-  roles?: Role[],
   token: string;
   created_at: string,
   status: 'BANNED' | 'PREMIUM' | 'NEW' | 'CLIENT'
   s_type?: string;
-  stats?: UserStats
 }
 
 export interface UserAddressInterface {
@@ -588,21 +237,6 @@ export interface UserPhoneInterface {
   created_at: string;     // Format ISO String
   updated_at: string;     // Format ISO String
 }
-interface UserStats {
-  avgRating?: number,
-  commentsCount?: number,
-  productsBought?: number,
-  totalSpent?: number,
-  ordersCount?: number,
-  lastVisit?: string | null
-}
-
-export type Role = TypeJsonRole & {
-  id: string,
-  user_id:string, 
-  created_at:string, 
-  updated_at:string,
-}
 
 export interface CommandItemInterface {
   bind: Record<string, string>
@@ -619,7 +253,22 @@ export interface CommandItemInterface {
   updated_at: string
   product?: ProductInterface,
 }
-
+export type CommandFilterType = Partial<{
+  command_id: string,
+  user_id: string,
+  order_by?: "date_desc" | "date_asc" | "total_price_desc" | "total_price_asc" | undefined,
+  page: number,
+  product_id: string,
+  limit: number,
+  no_save: boolean,
+  status: string[],
+  min_price: number | undefined,
+  max_price: number | undefined,
+  min_date: string | undefined,
+  max_date: string | undefined,
+  with_items: boolean,
+  search?: string
+}>
 export interface CommandInterface {
   id: string,
   store_id: string,
@@ -771,12 +420,8 @@ export interface FeatureInterface {
   created_at: string,
   updated_at: string,
   values?: ValueInterface[];
-  _request_mode?: 'edited' | 'new'
 };
-// src/Interfaces/Interfaces.ts (ou un fichier similaire)
 
-// --- Interface pour FavoriteInteraface ---
-// Basée sur le modèle FavoriteInteraface.ts et les données retournées par get_favorites
 export interface FavoriteInteraface {
   id: string;
   user_id: string;
@@ -791,17 +436,15 @@ export interface FavoriteInteraface {
 // Basée sur le modèle Inventory.ts
 export interface Inventory {
   id: string;
-  address_name: string; // Nom du point de vente/stock
-  views: (string | Blob)[];       // URLs des images (retournées par l'API après upload)
-  email: string | null;  // Email de contact (peut être null)
-  latitude: number;      // Coordonnée géographique
-  longitude: number;     // Coordonnée géographique
-  created_at: string;    // Format ISO String
-  updated_at: string;    // Format ISO String
-
-  // --- Relations potentielles (non incluses par défaut dans le contrôleur actuel) ---
-  // phones?: InventoryPhone[];   // Si on ajoute la relation dans le modèle/contrôleur
-  // socials?: InventorySocial[]; // Si on ajoute la relation dans le modèle/contrôleur
+  address_name: string; 
+  views: (string | Blob)[];       
+  email: string | null;  
+  latitude: number;      
+  longitude: number;     
+  created_at: string;    
+  updated_at: string;    
+  phones?: InventoryPhone[];   
+  socials?: InventorySocial[]; 
 }
 
 // --- Interfaces pour les relations d'Inventory (si nécessaires) ---
@@ -826,18 +469,4 @@ export interface InventorySocial {
 }
 
 
-// --- Interface pour GlobalSearchType ---
-// Basée sur la structure de retour de GlobaleServicesController.global_search
-export interface GlobalSearchType {
-  // Note: L'API retourne un objet unique ou un tableau selon la recherche (#id ou texte).
-  // L'implémentation de l'API normalise maintenant pour toujours retourner des tableaux.
-  products: ProductInterface[];
-  categories: CategoryInterface[];
-  clients: UserInterface[];       // Résultats de recherche pour les utilisateurs (clients)
-  commands: CommandInterface[]; meta: {
-    products: number
-    clients: number
-    commands: number
-    categories: number
-  }
-}
+
