@@ -14,7 +14,7 @@ const ReviewItem: React.FC<{ review: CommentInterface }> = ({ review }) => {
     <div className="py-4 border-b dark:border-slate-700">
       <div className="flex items-center mb-2">
         <img 
-          src={review.user?.photo?.[0] ? getMedia({source: review.user.photo[0] as string, from: 'server', host: serverUrl}) : `https://ui-avatars.com/api/?name=${encodeURIComponent(review.user?.full_name || 'U')}&background=random`}
+          src={getMedia({source: review.user?.photo?.[0] as string, from: 'server', host: serverUrl})}
           alt={review.user?.full_name || 'Utilisateur'} 
           className="w-10 h-10 rounded-full mr-3"
         />

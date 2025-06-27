@@ -20,7 +20,6 @@ import { localDir, root } from './root.js'
 import { closeQueue, getServerQueue, redisClient } from "../api/Scalling/bullmqClient.js";
 import { LoadMonitorService } from "../api/Scalling/loadMonitorClient.js";
 import logger from "../api/Logger.js";
-import { http } from "../Components/Utils/functions.js";
 
 const SERVICE_ID = process.env.SERVICE_ID;
 const isProduction = process.env.NODE_ENV === "production";
@@ -59,14 +58,14 @@ async function startServer() {
   });
   app.get('*', async (req, res) => {
 
-    const storeApiUrl = http + req.headers['x-store-api-url'] as string ; 
-    const serverUrl = http +  req.headers['x-server-api-url'] as string;
+    const storeApiUrl = req.headers['x-store-api-url'] as string ; 
+    const storeId = req.headers['x-store-id'] as string ; 
+    const serverUrl = req.headers['x-server-url'] as string;
+    const serverApiUrl = req.headers['x-server-api-url'] as string;
     
     if (!storeApiUrl) console.warn("[Theme Mono Server] X-Store-Api-Url header or env var not found.");
     if (!serverUrl) console.warn("[Theme Mono Server] X-Server-Url header or env var not found.");
     
-    const storeId = storeApiUrl.split('/')[3]; 
-
     let themeSettingsInitial = {};
     let storeInfoInitial = {}; // Pour le nom du store, logo, etc.
 
@@ -79,9 +78,8 @@ async function startServer() {
         } else {
           console.log(`[Theme Mono Server] No theme settings found in Redis for store ${storeId}. Using defaults.`);
         }
-        // Tu pourrais aussi charger des infos basiques du store ici (nom, logo) si elles sont aussi dans Redis ou via une API rapide
-        // const storeInfoString = await redisClient.connection.get(`store_info:${storeId}`);
-        // if (storeInfoString) storeInfoInitial = JSON.parse(storeInfoString);
+        const storeInfoString = await redisClient.connection.get(`store+id+:${storeId}`);
+        if (storeInfoString) storeInfoInitial = JSON.parse(storeInfoString);
 
       } catch (err) {
         console.error(`[Theme Mono Server] Error fetching theme settings from Redis for store ${storeId}:`, err);
@@ -93,12 +91,11 @@ async function startServer() {
     const pageContextInit = {
       urlOriginal: req.originalUrl,
       headersOriginal: req.headers, 
-      themeSettingsInitial,         // <-- NOUVEAU: Settings chargés
-      storeInfoInitial,           // <-- NOUVEAU: Infos du store (optionnel)
-      storeApiUrl: storeApiUrl || null, // Assurer qu'il est passé
-      serverUrl: serverUrl || null,     // Assurer qu'il est passé
-      // Tu pourrais aussi passer storeId au pageContext si nécessaire dans le client
-      // storeIdFromSSR: storeId 
+      themeSettingsInitial,    
+      storeInfoInitial,          
+      storeApiUrl , 
+      serverUrl,  
+      serverApiUrl
     }
     const pageContext = await renderPage(pageContextInit)
     if (pageContext.errorWhileRendering) {
@@ -111,7 +108,7 @@ async function startServer() {
     res.send(httpResponse.body)
   })
 
-  const port = process.env.PORT || 3000
+  const port = process.env.PORT || 3010
   const server = app.listen(port)
   console.log(`Server running at http://localhost:${port}`)
 

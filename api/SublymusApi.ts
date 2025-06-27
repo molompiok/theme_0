@@ -485,7 +485,12 @@ export class SublymusApi {
         console.log(`API Request: ${method} ${url}`, requestBody);
 
         try {
-            const response = await fetch(url, { method, headers: requestHeaders, body: requestBody });
+            const response = await fetch(url, { 
+                method, 
+                headers: requestHeaders, 
+                body: requestBody,
+                credentials:'include'
+            });
             if (response.status === 204) {
                 console.log(`API Response: 204 No Content`);
                 return null as T;

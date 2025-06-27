@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react(), vike(), tailwindcss()],
   server: {
     allowedHosts:true,
-    port: 3000, 
+    port: 3010, 
     hmr: {
       port: 24700,
     },

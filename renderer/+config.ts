@@ -14,7 +14,9 @@ export default {
     'themeSettingsInitial',
     'lang',
     'storeApiUrl',
+    'storeId',
     'serverUrl',
+    'serverApiUrl',
     'storeInfoInitial'
   ],
   meta: {

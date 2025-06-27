@@ -137,11 +137,7 @@ export const SublymusApiProvider: React.FC<SublymusApiProviderProps> = ({ handle
         // }
 
         // Créer l'instance avec les deux URLs
-        console.log('---------  React Server ----------', {
-            serverUrl: mainServerUrl || 'https://server.sublymus.com',
-            storeApiUrl: storeApiUrl,
-        });
-
+      
         return new SublymusApi({
             handleUnauthorized(action, token) {
                 console.log(action, token);
